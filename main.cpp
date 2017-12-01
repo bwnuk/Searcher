@@ -25,12 +25,16 @@ int main()
 				case sf::Keyboard::Escape:
 					window.close();
 					break;
+
+				//UP AND DOWN PRESSED
 				case sf::Keyboard::Up:
 					menu.MoveUp();
 					break;
 				case sf::Keyboard::Down:
 					menu.MoveDown();
 					break;
+				
+				//ENTER PRESSED
 				case sf::Keyboard::Return:
 					switch (menu.GetPressedItem())
 					{
@@ -45,6 +49,7 @@ int main()
 						break;
 					}
 					break;
+
 				default:
 					break;
 				}
