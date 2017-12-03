@@ -1,26 +1,28 @@
 #include "Menu.h"
 
 
-Menu::Menu(float width, float height)
+Menu::Menu(float width, float height, sf::View& view)
 {
 	try {
+		//Reading image and font
 		if (!background_texture.loadFromFile("images/menu_background.jpg"))
 		{
 			throw("Background image error");
 		}
 
-		
-
 		if (!font.loadFromFile("font/arial.ttf"))
 		{
 			throw("Font error");
 		}
+
+		//Title Set
 		title.setCharacterSize(50);
 		title.setFont(font);
 		title.setFillColor(sf::Color::Blue);
 		title.setString("Searcher");
 		title.setPosition(width / 2.6f, 90);
 
+		//Menu text set
 		for (size_t i = 0; i < Items_Menu; i++)
 		{
 			menu[i].setFont(font);
@@ -38,6 +40,7 @@ Menu::Menu(float width, float height)
 	{
 		std::cout << e.what();
 	}
+
 	background_sprite.setTexture(background_texture);
 	
 }
@@ -50,6 +53,7 @@ void Menu::Draw(sf::RenderWindow &window)
 {
 	window.draw(background_sprite);
 	window.draw(title);
+
 	for (size_t i = 0; i < Items_Menu; i++)
 	{
 		window.draw(menu[i]);
@@ -58,6 +62,7 @@ void Menu::Draw(sf::RenderWindow &window)
 
 void Menu::MoveUp()
 {
+	//Moving up menu
 	if (selectedItemIndex - 1 >= 0)
 	{
 		menu[selectedItemIndex].setFillColor(sf::Color::White);
@@ -68,12 +73,24 @@ void Menu::MoveUp()
 
 void Menu::MoveDown()
 {
+	//Moving down menu
 	if (selectedItemIndex + 1 < Items_Menu)
 	{
 		menu[selectedItemIndex].setFillColor(sf::Color::White);
 		selectedItemIndex++;
 		menu[selectedItemIndex].setFillColor(sf::Color::Red);
 	}
+}
+
+void Menu::LoadPart()
+{
+}
+
+void Menu::PlayPart(sf::RenderWindow & window, sf::View& view)
+{
+	//Playing time
+	Play play(window, view);
+	play.Settup();
 }
 
 int Menu::GetPressedItem()

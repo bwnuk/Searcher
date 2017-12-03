@@ -1,12 +1,17 @@
 #include <SFML/Graphics.hpp>
 #include "Menu.h"
 
+const int WIDTH = 800;
+const int HEIGHT = 600;
+
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(800, 600), "Searcher", sf::Style::Titlebar | sf::Style::Close);
+	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Searcher", sf::Style::Titlebar | sf::Style::Close);
 	sf::Event evnt;
+	sf::View view;
+	//view.setCenter(0, 0);
 
-	Menu menu(window.getSize().x, window.getSize().y);
+	Menu menu(window.getSize().x, window.getSize().y, view);
 
 	while (window.isOpen())
 	{
@@ -39,8 +44,10 @@ int main()
 					switch (menu.GetPressedItem())
 					{
 					case 0:
+						menu.PlayPart(window, view);
 						break;
 					case 1:
+						menu.LoadPart();
 						break;
 					case 2:
 						window.close();
@@ -61,6 +68,7 @@ int main()
 
 		window.clear();
 		menu.Draw(window);
+		//window.setView(view);
 		window.display();
 	}
 
