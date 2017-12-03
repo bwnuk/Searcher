@@ -10,14 +10,19 @@ Play::Play(sf::RenderWindow& w, sf::View& v)
 		{
 			throw("Font error");
 		}
+
 		map.loadFromFile("images/1lvl.png");
+		
 		look.setTexture(map);
+		look.setOrigin(map.getSize().x/2.0f, map.getSize().y / 2.0f);
+		look.setScale(sf::Vector2f(1.2f, 1.4f));
+		view->setCenter(look.getPosition());
 	}
 	catch (std::exception& e)
 	{
 		std::cout << e.what() << std::endl;
 	}
-
+	
 }
 
 
@@ -57,6 +62,8 @@ void Play::Settup()
 
 void Play::Draw()
 {
+	window->clear();
+	window->setView(*view);
 	window->draw(look);
 	window->display();
 }
