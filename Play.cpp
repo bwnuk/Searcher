@@ -32,6 +32,10 @@ Play::~Play()
 
 void Play::Settup()
 {
+	sf::Texture *player_texture;
+	player_texture->loadFromFile("images/player.png");
+
+	Player player(player_texture, sf::Vector2f(9, 4), 2.0f, 0.1f, 140.0f);
 	while (window->isOpen())
 	{
 		sf::Event evnt;

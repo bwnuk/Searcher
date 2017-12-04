@@ -35,7 +35,7 @@ void Player::Update(float deltaTime)
 		movement.y += speed*deltaTime;
 	if (movement.x > 0.0f)
 	{
-		row = 2;
+		row = 3;
 		direction = right;
 	}
 	if (movement.x < 0.0f)
@@ -46,12 +46,12 @@ void Player::Update(float deltaTime)
 
 	if (movement.y < 0.0f)
 	{
-		row = 3;
+		row = 0;
 		direction = up;
 	}
 	if (movement.y > 0.0f)
 	{
-		row = 0;
+		row = 2;
 		direction = down;
 	}
 
