@@ -32,10 +32,10 @@ Play::~Play()
 
 void Play::Settup()
 {
-	sf::Texture *player_texture;
-	player_texture->loadFromFile("images/player.png");
+	float deltatime = 0.0f;
+	player_texture.loadFromFile("images/player.png");
 
-	Player player(player_texture, sf::Vector2f(9, 4), 2.0f, 0.1f, 140.0f);
+	Player player(player_texture, sf::Vector2f(9, 4), 2.0f, 0.2f, 140.0f, 0.0f, 0.0f);
 	while (window->isOpen())
 	{
 		sf::Event evnt;
@@ -60,14 +60,16 @@ void Play::Settup()
 				break;
 			}
 		}
-		Draw();
+		player.Update(deltatime);
+		Draw(player);
 	}
 }
 
-void Play::Draw()
+void Play::Draw(Player &p)
 {
 	window->clear();
 	window->setView(*view);
 	window->draw(look);
+	p.Draw(*window);
 	window->display();
 }

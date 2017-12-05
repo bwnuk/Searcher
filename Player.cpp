@@ -1,19 +1,18 @@
 #include "Player.h"
 
 
-Player::Player(sf::Texture* texture, sf::Vector2f imageCount, float scale_body, float switchTime, float speed)
-	:Character(texture), animation(texture, imageCount, switchTime)
+Player::Player(sf::Texture& texture, sf::Vector2f imageCount, float scale_body, float switchTime, float speed, float x, float y)
+	:Character(texture, x, y), animation(texture, imageCount, switchTime)
 {
 	this->speed = speed;
 	row = 0;
 	Stay = true;
-	sizeBody = sf::Vector2f(texture->getSize());
+	sizeBody = sf::Vector2f(texture.getSize());
 	sizeBody.y = sizeBody.y / imageCount.y * scale_body;
 	sizeBody.x = sizeBody.x / imageCount.x * scale_body;
 	body.setSize(sizeBody);
 	body.setOrigin(body.getSize() / 2.0f);
-	body.setPosition(500.0f, 500.0f);
-	body.setTexture(texture);
+	body.setTexture(&texture);
 	collisionSize = sizeBody.y + 10.0f;
 
 }
@@ -33,6 +32,7 @@ void Player::Update(float deltaTime)
 		movement.y -= speed*deltaTime;
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 		movement.y += speed*deltaTime;
+
 	if (movement.x > 0.0f)
 	{
 		row = 3;
@@ -62,4 +62,9 @@ void Player::Update(float deltaTime)
 	animation.Update(row, deltaTime, Stay);
 	body.setTextureRect(animation.uvRect);
 	body.move(movement);
+}
+
+void Player::Draw(sf::RenderWindow& w)
+{
+	w.draw(body);
 }

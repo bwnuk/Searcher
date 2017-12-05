@@ -9,13 +9,13 @@ public:
 	~Play();
 
 	void Settup();
-	void Draw();
+	void Draw(Player &p);
 private:
 	sf::RenderWindow *window;
 	sf::View *view;
 	sf::Sprite look;
 	sf::Font font_text;
-
+	sf::Texture player_texture;
 	sf::Texture map;
 	sf::Texture chat;
 };
