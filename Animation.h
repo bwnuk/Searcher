@@ -4,6 +4,7 @@
 class Animation
 {
 public:
+	Animation();
 	Animation(sf::Texture& texture, sf::Vector2f imageCount, float switchtime);
 	~Animation();
 	void Update(unsigned int row, float deltaTime, bool Stay);

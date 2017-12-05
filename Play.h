@@ -9,8 +9,10 @@ public:
 	~Play();
 
 	void Settup();
-	void Draw(Player &p);
+	void Draw();
 private:
+	Player player;
+
 	sf::RenderWindow *window;
 	sf::View *view;
 	sf::Sprite look;
@@ -18,5 +20,6 @@ private:
 	sf::Texture player_texture;
 	sf::Texture map;
 	sf::Texture chat;
+	sf::Clock clock;
 };
 

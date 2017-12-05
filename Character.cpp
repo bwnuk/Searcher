@@ -14,6 +14,10 @@ Character::Character(sf::Texture& t, float x, float y)
 	body.setPosition(x, y);
 }
 
+Character::Character()
+{
+}
+
 Character::~Character()
 {
 }

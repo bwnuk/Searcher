@@ -1,8 +1,11 @@
 #include "Player.h"
 
 
+Player::Player():Character()
+{}
+
 Player::Player(sf::Texture& texture, sf::Vector2f imageCount, float scale_body, float switchTime, float speed, float x, float y)
-	:Character(texture, x, y), animation(texture, imageCount, switchTime)
+	:Character(texture, x, y), Animation(texture, imageCount, switchTime)
 {
 	this->speed = speed;
 	row = 0;
@@ -59,8 +62,9 @@ void Player::Update(float deltaTime)
 	if (movement.y == 0 && movement.x == 0)
 		Stay = true;
 
-	animation.Update(row, deltaTime, Stay);
-	body.setTextureRect(animation.uvRect);
+	Animation::Update(row, deltaTime, Stay);
+
+	body.setTextureRect(uvRect);
 	body.move(movement);
 }
 

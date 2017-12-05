@@ -4,40 +4,46 @@ Play::Play(sf::RenderWindow& w, sf::View& v)
 {
 	window = &w;
 	view = &v;
+
 	try
 	{
 		if (!font_text.loadFromFile("font/arial.ttf"))
-		{
 			throw("Font error");
-		}
 
-		map.loadFromFile("images/1lvl.png");
+		if (!map.loadFromFile("images/1lvl.png"))
+			throw("Background error");
 		
 		look.setTexture(map);
 		look.setOrigin(map.getSize().x/2.0f, map.getSize().y / 2.0f);
 		look.setScale(sf::Vector2f(1.2f, 1.4f));
+		
 		view->setCenter(look.getPosition());
+
+		if (!player_texture.loadFromFile("images/player.png"))
+			throw("Player image error");
+
+		player = Player(player_texture, sf::Vector2f(9, 4), 2.0f, 0.1f, 100.0f, 0.0f, 0.0f);
 	}
 	catch (std::exception& e)
 	{
 		std::cout << e.what() << std::endl;
 	}
-	
 }
 
 
 Play::~Play()
 {
+	player.~Player();
 }
 
 void Play::Settup()
 {
-	float deltatime = 0.0f;
-	player_texture.loadFromFile("images/player.png");
-
-	Player player(player_texture, sf::Vector2f(9, 4), 2.0f, 0.2f, 140.0f, 0.0f, 0.0f);
+	float deltatime;
+	
 	while (window->isOpen())
 	{
+		deltatime = clock.restart().asSeconds();
+
 		sf::Event evnt;
 		while (window->pollEvent(evnt))
 		{
@@ -61,15 +67,15 @@ void Play::Settup()
 			}
 		}
 		player.Update(deltatime);
-		Draw(player);
+		Draw();
 	}
 }
 
-void Play::Draw(Player &p)
+void Play::Draw()
 {
 	window->clear();
 	window->setView(*view);
 	window->draw(look);
-	p.Draw(*window);
+	player.Draw(*window);
 	window->display();
 }

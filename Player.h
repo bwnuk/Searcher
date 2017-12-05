@@ -3,9 +3,10 @@
 #include "Character.h"
 #include "Animation.h"
 
-class Player: public Character
+class Player: public Character, public Animation
 {
 public:
+	Player();
 	Player(sf::Texture& texture, sf::Vector2f imageCount, float scale_body, float switchTime, float speed, float x, float y);
 	~Player();
 	void Update(float deltaTime);
@@ -15,7 +16,6 @@ public:
 private:
 
 	Direction direction;
-	Animation animation;
 	unsigned int row;
 	float speed;
 	bool Stay;
