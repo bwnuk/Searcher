@@ -1,7 +1,7 @@
 #include "Player.h"
 
 
-Player::Player():Character()
+Player::Player():Character(), Animation()
 {}
 
 Player::Player(sf::Texture& texture, sf::Vector2f imageCount, float scale_body, float switchTime, float speed, float x, float y)
@@ -10,14 +10,16 @@ Player::Player(sf::Texture& texture, sf::Vector2f imageCount, float scale_body, 
 	this->speed = speed;
 	row = 0;
 	Stay = true;
+
 	sizeBody = sf::Vector2f(texture.getSize());
 	sizeBody.y = sizeBody.y / imageCount.y * scale_body;
 	sizeBody.x = sizeBody.x / imageCount.x * scale_body;
+	
 	body.setSize(sizeBody);
 	body.setOrigin(body.getSize() / 2.0f);
 	body.setTexture(&texture);
+	
 	collisionSize = sizeBody.y + 10.0f;
-
 }
 
 Player::~Player()
@@ -27,6 +29,8 @@ Player::~Player()
 void Player::Update(float deltaTime)
 {
 	sf::Vector2f movement(0.0f, 0.0f);
+
+	//Checking pressed key
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 		movement.x -= speed*deltaTime;
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
@@ -36,6 +40,7 @@ void Player::Update(float deltaTime)
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 		movement.y += speed*deltaTime;
 
+	//Checking direction
 	if (movement.x > 0.0f)
 	{
 		row = 3;
@@ -59,6 +64,8 @@ void Player::Update(float deltaTime)
 	}
 
 	Stay = false;
+
+	//Stay or going
 	if (movement.y == 0 && movement.x == 0)
 		Stay = true;
 

@@ -7,15 +7,14 @@ const int HEIGHT = 600;
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Searcher", sf::Style::Titlebar | sf::Style::Close);
-	sf::Event evnt;
+	
 	sf::View view;
-	//view.setCenter(0, 0);
 
 	Menu menu(window.getSize().x, window.getSize().y, view);
 
 	while (window.isOpen())
 	{
-		
+		sf::Event evnt;
 		while (window.pollEvent(evnt))
 		{
 			switch (evnt.type)
@@ -44,12 +43,15 @@ int main()
 					switch (menu.GetPressedItem())
 					{
 					case 0:
+						//Playing
 						menu.PlayPart(window, view);
 						break;
 					case 1:
+						//Loading
 						menu.LoadPart();
 						break;
 					case 2:
+						//Close
 						window.close();
 						break;
 					default:
@@ -68,7 +70,6 @@ int main()
 
 		window.clear();
 		menu.Draw(window);
-		//window.setView(view);
 		window.display();
 	}
 
