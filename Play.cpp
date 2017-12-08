@@ -61,12 +61,9 @@ Play::~Play()
 
 void Play::Settup()
 {
-	sf::Texture t;
-	t.loadFromFile("images/wut.png");
 	while (window->isOpen())
 	{
-		float deltatime = clock.restart().asSeconds();
-
+		float deltatime = ClockRestart();
 		Locks();
 		sf::Event evnt;
 
@@ -92,6 +89,7 @@ void Play::Settup()
 				break;
 			}
 		}
+
 		CollisionsCheck();
 		player.Update(deltatime);
 		Draw();
@@ -117,7 +115,7 @@ void Play::CollisionsCheck()
 	if (key.GetCollider().CheckCollision(player.GetCollider(), 1.0f))
 	{
 		key_found = true;
-		communicat_text.setString("You found key");
+		communicat_text.setString("You found key");	
 	}
 }
 
@@ -137,4 +135,9 @@ void Play::Draw()
 	}
 		
 	window->display();
+}
+
+float Play::ClockRestart()
+{
+	return clock.restart().asSeconds();
 }

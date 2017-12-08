@@ -1,5 +1,9 @@
 #include <SFML\Graphics.hpp>
 #include <iostream>
+#include <ctime>
+#include <Windows.h>
+#include <string>
+#include <cstdlib>
 #include "Player.h"
 #include "Collision.h"
 #include "Object.h"
@@ -15,6 +19,8 @@ public:
 	void Locks();
 	void CollisionsCheck();
 	void Draw();
+
+	float ClockRestart();
 private:
 	Player player;
 	Object key;
