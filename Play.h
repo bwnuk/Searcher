@@ -20,11 +20,15 @@ public:
 	void Locks();
 	void CollisionsCheck();
 	void Draw();
+	void Lose();
 
 	float ClockRestart();
 private:
 	Player player;
 	Enemy pirate;
+	Enemy knight;
+	Enemy magic;
+
 	Object key;
 	Communicat key_communicat;
 	bool key_found;
@@ -44,12 +48,16 @@ private:
 	sf::Sprite look;
 
 	sf::Texture player_texture;
-	sf::Texture enemy__texture;
+	sf::Texture enemy_pirate__texture;
+	sf::Texture enemy_magic_texture;
+	sf::Texture enemy_knight_texture;
 	sf::Texture key_texture;
 	sf::Texture chat_texture;
 	sf::Texture map;
+	sf::Texture r;
 	sf::Texture chat;
 	sf::Text communicat_text;
+	sf::Text lose_text;
 
 	sf::Clock clock;
 };

@@ -15,7 +15,6 @@ Enemy::Enemy(sf::Texture & t, sf::Vector2f imageCount,  sf::Vector2f p,  float s
 	body.setSize(sizeBody);
 	body.setOrigin(body.getSize() / 2.0f);
 	body.setTexture(&t);
-	collisionSize = sizeBody.y + 10.0f;
 	Stay = false;
 }
 

@@ -33,16 +33,28 @@ Play::Play(sf::RenderWindow& w, sf::View& v)
 
 		player = Player(player_texture, sf::Vector2f(9, 4), 1.3f, 0.1f, 100.0f, sf::Vector2f(0.0f, 0.0f));
 
-		if (!enemy__texture.loadFromFile("images/piratess.png"))
+		if (!enemy_pirate__texture.loadFromFile("images/piratess.png"))
 			throw("Enemy image error");
 
-		pirate = Enemy(enemy__texture, sf::Vector2f(9, 4),sf::Vector2f(10.0f,10.0f), 1.3f,90 ,  0.1f, 2);
+		pirate = Enemy(enemy_pirate__texture, sf::Vector2f(9, 4),sf::Vector2f(100.0f,100.0f), 1.3f, 90 ,  0.1f, 2);
+		
+		if (!enemy_knight_texture.loadFromFile("images/bad.png"))
+			throw("Enemy image error");
+
+		knight = Enemy(enemy_knight_texture, sf::Vector2f(3, 4), sf::Vector2f(-100.0f, -120.0f), 1.3f, 60, 0.1f, 2);
+
+		if (!enemy_magic_texture.loadFromFile("images/wut.png"))
+			throw("Enemy image error");
+
+		magic = Enemy(enemy_magic_texture, sf::Vector2f(3, 4), sf::Vector2f(200.0f, 200.0f), 1.3f, 60, 0.1f, 2);
 
 		if (!key_texture.loadFromFile("images/key.png"))
 			throw("Key image error");
 		key = Object(key_texture, sf::Vector2f(30.f,30.f), sf::Vector2f(-150.f,-150.f));
 
 		if (!chat_texture.loadFromFile("images/stone.jpg"))
+			throw("Chat image error");
+		if (!r.loadFromFile("images/stone.jpg"))
 			throw("Chat image error");
 		
 		key_communicat = Communicat( chat_texture);
@@ -52,6 +64,12 @@ Play::Play(sf::RenderWindow& w, sf::View& v)
 		communicat_text.setFillColor(sf::Color::Blue);
 		communicat_text.setCharacterSize(50);
 		communicat_text.setPosition(-200, 330);
+
+		lose_text.setFont(font_text);
+		lose_text.setFillColor(sf::Color::White);
+		lose_text.setCharacterSize(100);
+		lose_text.setPosition(0, 0);
+		lose_text.setString("You lost!");
 	}
 	catch (std::exception& e)
 	{
@@ -98,6 +116,8 @@ void Play::Settup()
 		}
 
 		CollisionsCheck();
+		magic.Update(deltatime);
+		knight.Update(deltatime);
 		pirate.Update(deltatime);
 		player.Update(deltatime);
 		Draw();
@@ -106,10 +126,10 @@ void Play::Settup()
 
 void Play::Locks()
 {
-	upLock = Collision(nullptr, sf::Vector2f(sizeBG.x, 0.0f), sf::Vector2f(0.0f, -(sizeBG.y) / 2.0f - 20.0f));
-	leftLock = Collision(nullptr, sf::Vector2f(0.0f, sizeBG.y), sf::Vector2f(-(sizeBG.x) / 2.0f, 0.0f));
-	rightLock = Collision(nullptr, sf::Vector2f(0.0f, sizeBG.y), sf::Vector2f(sizeBG.x / 2.0f + 5.f, sizeBG.y / 2.0f));
-	downLock = Collision(nullptr, sf::Vector2f(sizeBG.x, 0.0f), sf::Vector2f(sizeBG.x / 2.0f, sizeBG.y / 2.0f - 30.f));
+	upLock = Collision(&r, sf::Vector2f(sizeBG.x, 0.0f), sf::Vector2f(0.0f, -(sizeBG.y) / 2.0f - 20.0f));
+	leftLock = Collision(&r, sf::Vector2f(0.0f, sizeBG.y), sf::Vector2f(-(sizeBG.x) / 2.0f, 0.0f));
+	rightLock = Collision(&r, sf::Vector2f(0.0f, sizeBG.y), sf::Vector2f(sizeBG.x / 2.0f + 5.f, 0.0f));
+	downLock = Collision(&r, sf::Vector2f(sizeBG.x, 0.0f), sf::Vector2f(sizeBG.x / 2.0f, sizeBG.y / 2.0f - 30.f));
 }
 
 void Play::CollisionsCheck()
@@ -135,6 +155,40 @@ void Play::CollisionsCheck()
 	{
 		pirate.setDirection(2);
 	}
+
+	if (upLock.GetCollider().CheckCollision(knight.GetCollider(), 1.0f))
+	{
+		knight.setDirection(3);
+
+	}
+	else if (downLock.GetCollider().CheckCollision(knight.GetCollider(), 1.0f))
+	{
+		knight.setDirection(2);
+	}
+
+
+	if (upLock.GetCollider().CheckCollision(magic.GetCollider(), 1.0f))
+	{
+		magic.setDirection(3);
+
+	}
+	else if (downLock.GetCollider().CheckCollision(magic.GetCollider(), 1.0f))
+	{
+		magic.setDirection(2);
+	}
+
+	if (player.GetCollider().CheckCollision(pirate.GetCollider(), 0.0f))
+	{
+		Lose();
+	}
+	if(player.GetCollider().CheckCollision(magic.GetCollider(), 0.0f))
+	{
+		Lose();
+	}
+	if (player.GetCollider().CheckCollision(knight.GetCollider(), 0.0f))
+	{
+		Lose();
+	}
 }
 
 void Play::Draw()
@@ -144,6 +198,8 @@ void Play::Draw()
 	window->setView(*view);
 	window->draw(look);
 	pirate.Draw(*window);
+	magic.Draw(*window);
+	knight.Draw(*window);
 	player.Draw(*window);
 	key.Draw(*window);
 
@@ -154,6 +210,22 @@ void Play::Draw()
 	}
 		
 	window->display();
+}
+
+void Play::Lose()
+{
+	window->clear();
+	window->setView(*view);
+	window->draw(lose_text);
+	window->display();
+	sf::Event evnt;
+	while (evnt.KeyPressed != sf::Keyboard::Return)
+	{
+		if (evnt.KeyPressed == sf::Keyboard::Return)
+			break;
+	}
+
+	window->close();
 }
 
 float Play::ClockRestart()
