@@ -8,10 +8,10 @@ Character::Character(sf::Texture& t, sf::Vector2f s, sf::Vector2f p)
 	body.setPosition(p);
 }
 
-Character::Character(sf::Texture& t, float x, float y)
+Character::Character(sf::Texture& t, sf::Vector2f p)
 {
 	body.setTexture(&t);
-	body.setPosition(x, y);
+	body.setPosition(p);
 }
 
 Character::Character()

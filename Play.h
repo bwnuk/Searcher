@@ -8,6 +8,7 @@
 #include "Collision.h"
 #include "Object.h"
 #include "Communicat.h"
+#include "Enemy.h"
 
 class Play: public Collision
 {
@@ -23,6 +24,7 @@ public:
 	float ClockRestart();
 private:
 	Player player;
+	Enemy pirate;
 	Object key;
 	Communicat key_communicat;
 	bool key_found;
@@ -42,6 +44,7 @@ private:
 	sf::Sprite look;
 
 	sf::Texture player_texture;
+	sf::Texture enemy__texture;
 	sf::Texture key_texture;
 	sf::Texture chat_texture;
 	sf::Texture map;

@@ -31,7 +31,12 @@ Play::Play(sf::RenderWindow& w, sf::View& v)
 		if (!player_texture.loadFromFile("images/player.png"))
 			throw("Player image error");
 
-		player = Player(player_texture, sf::Vector2f(9, 4), 1.3f, 0.1f, 100.0f, 0.0f, 0.0f);
+		player = Player(player_texture, sf::Vector2f(9, 4), 1.3f, 0.1f, 100.0f, sf::Vector2f(0.0f, 0.0f));
+
+		if (!enemy__texture.loadFromFile("images/piratess.png"))
+			throw("Enemy image error");
+
+		pirate = Enemy(enemy__texture, sf::Vector2f(9, 4),sf::Vector2f(10.0f,10.0f), 1.3f,90 ,  0.1f, 2);
 
 		if (!key_texture.loadFromFile("images/key.png"))
 			throw("Key image error");
@@ -39,8 +44,10 @@ Play::Play(sf::RenderWindow& w, sf::View& v)
 
 		if (!chat_texture.loadFromFile("images/stone.jpg"))
 			throw("Chat image error");
+		
 		key_communicat = Communicat( chat_texture);
 		key_found = false;
+		
 		communicat_text.setFont(font_text);
 		communicat_text.setFillColor(sf::Color::Blue);
 		communicat_text.setCharacterSize(50);
@@ -91,6 +98,7 @@ void Play::Settup()
 		}
 
 		CollisionsCheck();
+		pirate.Update(deltatime);
 		player.Update(deltatime);
 		Draw();
 	}
@@ -117,6 +125,16 @@ void Play::CollisionsCheck()
 		key_found = true;
 		communicat_text.setString("You found key");	
 	}
+
+	if (upLock.GetCollider().CheckCollision(pirate.GetCollider(), 1.0f))
+	{
+		pirate.setDirection(3);
+	
+	}
+	else if (downLock.GetCollider().CheckCollision(pirate.GetCollider(), 1.0f))
+	{
+		pirate.setDirection(2);
+	}
 }
 
 void Play::Draw()
@@ -125,6 +143,7 @@ void Play::Draw()
 	window->clear();
 	window->setView(*view);
 	window->draw(look);
+	pirate.Draw(*window);
 	player.Draw(*window);
 	key.Draw(*window);
 
