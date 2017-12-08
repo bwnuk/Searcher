@@ -1,7 +1,13 @@
 #include <SFML\Graphics.hpp>
 #include <iostream>
+#include <ctime>
+#include <Windows.h>
+#include <string>
+#include <cstdlib>
 #include "Player.h"
 #include "Collision.h"
+#include "Object.h"
+#include "Communicat.h"
 
 class Play: public Collision
 {
@@ -10,9 +16,16 @@ public:
 	~Play();
 
 	void Settup();
+	void Locks();
+	void CollisionsCheck();
 	void Draw();
+
+	float ClockRestart();
 private:
 	Player player;
+	Object key;
+	Communicat key_communicat;
+	bool key_found;
 
 	Collision upLock;
 	Collision downLock;
@@ -23,11 +36,17 @@ private:
 
 	sf::RenderWindow *window;
 	sf::View *view;
-	sf::Sprite look;
+
 	sf::Font font_text;
+	
+	sf::Sprite look;
+
 	sf::Texture player_texture;
+	sf::Texture key_texture;
+	sf::Texture chat_texture;
 	sf::Texture map;
 	sf::Texture chat;
+	sf::Text communicat_text;
+
 	sf::Clock clock;
 };
-

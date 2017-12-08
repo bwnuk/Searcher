@@ -31,8 +31,20 @@ Play::Play(sf::RenderWindow& w, sf::View& v)
 		if (!player_texture.loadFromFile("images/player.png"))
 			throw("Player image error");
 
-
 		player = Player(player_texture, sf::Vector2f(9, 4), 1.3f, 0.1f, 100.0f, 0.0f, 0.0f);
+
+		if (!key_texture.loadFromFile("images/key.png"))
+			throw("Key image error");
+		key = Object(key_texture, sf::Vector2f(30.f,30.f), sf::Vector2f(-150.f,-150.f));
+
+		if (!chat_texture.loadFromFile("images/stone.jpg"))
+			throw("Chat image error");
+		key_communicat = Communicat( chat_texture);
+		key_found = false;
+		communicat_text.setFont(font_text);
+		communicat_text.setFillColor(sf::Color::Blue);
+		communicat_text.setCharacterSize(50);
+		communicat_text.setPosition(-200, 330);
 	}
 	catch (std::exception& e)
 	{
@@ -49,17 +61,10 @@ Play::~Play()
 
 void Play::Settup()
 {
-	sf::Texture t;
-	t.loadFromFile("images/wut.png");
 	while (window->isOpen())
 	{
-		float deltatime = clock.restart().asSeconds();
-
-		upLock = Collision(nullptr, sf::Vector2f(sizeBG.x, 0.0f), sf::Vector2f(0.0f, -(sizeBG.y)/2.0f-20.0f));
-		leftLock = Collision(nullptr, sf::Vector2f(0.0f, sizeBG.y), sf::Vector2f(-(sizeBG.x)/2.0f, 0.0f));
-		rightLock = Collision(nullptr,sf::Vector2f(0.0f, sizeBG.y), sf::Vector2f(sizeBG.x/2.0f+5.f, sizeBG.y / 2.0f));
-		downLock = Collision(nullptr, sf::Vector2f(sizeBG.x, 0.0f), sf::Vector2f(sizeBG.x / 2.0f, sizeBG.y/2.0f-30.f));
-
+		float deltatime = ClockRestart();
+		Locks();
 		sf::Event evnt;
 
 		//Checking if have to close
@@ -85,14 +90,32 @@ void Play::Settup()
 			}
 		}
 
-		//Locking room
-		upLock.GetCollider().CheckCollision(player.GetCollider(), 1.0f);
-		rightLock.GetCollider().CheckCollision(player.GetCollider(), 1.0f);
-		leftLock.GetCollider().CheckCollision(player.GetCollider(), 1.0f);
-		downLock.GetCollider().CheckCollision(player.GetCollider(), 1.0f);
-
+		CollisionsCheck();
 		player.Update(deltatime);
 		Draw();
+	}
+}
+
+void Play::Locks()
+{
+	upLock = Collision(nullptr, sf::Vector2f(sizeBG.x, 0.0f), sf::Vector2f(0.0f, -(sizeBG.y) / 2.0f - 20.0f));
+	leftLock = Collision(nullptr, sf::Vector2f(0.0f, sizeBG.y), sf::Vector2f(-(sizeBG.x) / 2.0f, 0.0f));
+	rightLock = Collision(nullptr, sf::Vector2f(0.0f, sizeBG.y), sf::Vector2f(sizeBG.x / 2.0f + 5.f, sizeBG.y / 2.0f));
+	downLock = Collision(nullptr, sf::Vector2f(sizeBG.x, 0.0f), sf::Vector2f(sizeBG.x / 2.0f, sizeBG.y / 2.0f - 30.f));
+}
+
+void Play::CollisionsCheck()
+{
+	//Locking room
+	upLock.GetCollider().CheckCollision(player.GetCollider(), 1.0f);
+	rightLock.GetCollider().CheckCollision(player.GetCollider(), 1.0f);
+	leftLock.GetCollider().CheckCollision(player.GetCollider(), 1.0f);
+	downLock.GetCollider().CheckCollision(player.GetCollider(), 1.0f);
+
+	if (key.GetCollider().CheckCollision(player.GetCollider(), 1.0f))
+	{
+		key_found = true;
+		communicat_text.setString("You found key");	
 	}
 }
 
@@ -103,12 +126,18 @@ void Play::Draw()
 	window->setView(*view);
 	window->draw(look);
 	player.Draw(*window);
-	try
+	key.Draw(*window);
+
+	if (key_found)
 	{
-		window->display();
+		key_communicat.Draw(window);
+		window->draw(communicat_text);
 	}
-	catch (std::exception& e)
-	{
-		std::cout << e.what();
-	}
+		
+	window->display();
+}
+
+float Play::ClockRestart()
+{
+	return clock.restart().asSeconds();
 }
