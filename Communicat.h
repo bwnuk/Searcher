@@ -1,23 +1,17 @@
 #pragma once
 #include <SFML\Graphics.hpp>
 #include <string>
-#include <fstream>
+#include <iostream>
 
 class Communicat
 {
 public:
 	Communicat();
-	Communicat(sf::RenderWindow& ww,  sf::Texture& b);
+	Communicat( sf::Texture& t_c);
 	~Communicat();
-	
-	void setPosition(sf::Vector2f f);
-private:
-	sf::RenderWindow* w;
-	sf::Text text_to_show;
-	std::string string_text;
-	sf::Font f;
-	sf::Sprite background_all;
-	sf::Texture* background_com;
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states)const;
-};
+	void Draw(sf::RenderWindow* w);
 
+private:
+	sf::Texture chat_texture;
+	sf::Sprite chat_sprite;
+};

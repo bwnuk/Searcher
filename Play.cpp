@@ -35,7 +35,16 @@ Play::Play(sf::RenderWindow& w, sf::View& v)
 
 		if (!key_texture.loadFromFile("images/key.png"))
 			throw("Key image error");
-		key = Object(key_texture, sf::Vector2f(30.f,30.f), sf::Vector2f(100.f,100.f));
+		key = Object(key_texture, sf::Vector2f(30.f,30.f), sf::Vector2f(-150.f,-150.f));
+
+		if (!chat_texture.loadFromFile("images/stone.jpg"))
+			throw("Chat image error");
+		key_communicat = Communicat( chat_texture);
+		key_found = false;
+		communicat_text.setFont(font_text);
+		communicat_text.setFillColor(sf::Color::Blue);
+		communicat_text.setCharacterSize(50);
+		communicat_text.setPosition(-200, 330);
 	}
 	catch (std::exception& e)
 	{
@@ -105,7 +114,11 @@ void Play::CollisionsCheck()
 	leftLock.GetCollider().CheckCollision(player.GetCollider(), 1.0f);
 	downLock.GetCollider().CheckCollision(player.GetCollider(), 1.0f);
 
-	key.GetCollider().CheckCollision(player.GetCollider(), 1.0f);
+	if (key.GetCollider().CheckCollision(player.GetCollider(), 1.0f))
+	{
+		key_found = true;
+		communicat_text.setString("You found key");
+	}
 }
 
 void Play::Draw()
@@ -117,5 +130,11 @@ void Play::Draw()
 	player.Draw(*window);
 	key.Draw(*window);
 
+	if (key_found)
+	{
+		key_communicat.Draw(window);
+		window->draw(communicat_text);
+	}
+		
 	window->display();
 }
