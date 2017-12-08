@@ -31,8 +31,11 @@ Play::Play(sf::RenderWindow& w, sf::View& v)
 		if (!player_texture.loadFromFile("images/player.png"))
 			throw("Player image error");
 
-
 		player = Player(player_texture, sf::Vector2f(9, 4), 1.3f, 0.1f, 100.0f, 0.0f, 0.0f);
+
+		if (!key_texture.loadFromFile("images/key.png"))
+			throw("Key image error");
+		key = Object(key_texture, sf::Vector2f(30.f,30.f), sf::Vector2f(100.f,100.f));
 	}
 	catch (std::exception& e)
 	{
@@ -55,11 +58,7 @@ void Play::Settup()
 	{
 		float deltatime = clock.restart().asSeconds();
 
-		upLock = Collision(nullptr, sf::Vector2f(sizeBG.x, 0.0f), sf::Vector2f(0.0f, -(sizeBG.y)/2.0f-20.0f));
-		leftLock = Collision(nullptr, sf::Vector2f(0.0f, sizeBG.y), sf::Vector2f(-(sizeBG.x)/2.0f, 0.0f));
-		rightLock = Collision(nullptr,sf::Vector2f(0.0f, sizeBG.y), sf::Vector2f(sizeBG.x/2.0f+5.f, sizeBG.y / 2.0f));
-		downLock = Collision(nullptr, sf::Vector2f(sizeBG.x, 0.0f), sf::Vector2f(sizeBG.x / 2.0f, sizeBG.y/2.0f-30.f));
-
+		Locks();
 		sf::Event evnt;
 
 		//Checking if have to close
@@ -84,16 +83,29 @@ void Play::Settup()
 				break;
 			}
 		}
-
-		//Locking room
-		upLock.GetCollider().CheckCollision(player.GetCollider(), 1.0f);
-		rightLock.GetCollider().CheckCollision(player.GetCollider(), 1.0f);
-		leftLock.GetCollider().CheckCollision(player.GetCollider(), 1.0f);
-		downLock.GetCollider().CheckCollision(player.GetCollider(), 1.0f);
-
+		CollisionsCheck();
 		player.Update(deltatime);
 		Draw();
 	}
+}
+
+void Play::Locks()
+{
+	upLock = Collision(nullptr, sf::Vector2f(sizeBG.x, 0.0f), sf::Vector2f(0.0f, -(sizeBG.y) / 2.0f - 20.0f));
+	leftLock = Collision(nullptr, sf::Vector2f(0.0f, sizeBG.y), sf::Vector2f(-(sizeBG.x) / 2.0f, 0.0f));
+	rightLock = Collision(nullptr, sf::Vector2f(0.0f, sizeBG.y), sf::Vector2f(sizeBG.x / 2.0f + 5.f, sizeBG.y / 2.0f));
+	downLock = Collision(nullptr, sf::Vector2f(sizeBG.x, 0.0f), sf::Vector2f(sizeBG.x / 2.0f, sizeBG.y / 2.0f - 30.f));
+}
+
+void Play::CollisionsCheck()
+{
+	//Locking room
+	upLock.GetCollider().CheckCollision(player.GetCollider(), 1.0f);
+	rightLock.GetCollider().CheckCollision(player.GetCollider(), 1.0f);
+	leftLock.GetCollider().CheckCollision(player.GetCollider(), 1.0f);
+	downLock.GetCollider().CheckCollision(player.GetCollider(), 1.0f);
+
+	key.GetCollider().CheckCollision(player.GetCollider(), 1.0f);
 }
 
 void Play::Draw()
@@ -103,12 +115,7 @@ void Play::Draw()
 	window->setView(*view);
 	window->draw(look);
 	player.Draw(*window);
-	try
-	{
-		window->display();
-	}
-	catch (std::exception& e)
-	{
-		std::cout << e.what();
-	}
+	key.Draw(*window);
+
+	window->display();
 }
