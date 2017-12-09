@@ -16,14 +16,10 @@ Play::Play(sf::RenderWindow& w, sf::View& v)
 			throw("Background error");
 		
 		look.setTexture(map);
-		look.setScale(sf::Vector2f(1.2f, 1.4f));
+		look.setScale(sf::Vector2f(1.0f, 1.0f));
 		look.setOrigin(map.getSize().x/2.0f, map.getSize().y / 2.0f);
-
-
 		
 		sizeBG = sf::Vector2f(map.getSize());
-		sizeBG.x *= 1.2f;
-		sizeBG.y *= 1.4f;
 
 		view->setCenter(look.getPosition());
 
@@ -31,26 +27,26 @@ Play::Play(sf::RenderWindow& w, sf::View& v)
 		if (!player_texture.loadFromFile("images/player.png"))
 			throw("Player image error");
 
-		player = Player(player_texture, sf::Vector2f(9, 4), 1.3f, 0.1f, 100.0f, sf::Vector2f(0.0f, 0.0f));
+		player = Player(player_texture, sf::Vector2f(9, 4), sf::Vector2f(0.0f, 0.0f), 1.3f, 0.1f, 100.0f );
 
 		if (!enemy_pirate__texture.loadFromFile("images/piratess.png"))
 			throw("Enemy image error");
 
-		pirate = Enemy(enemy_pirate__texture, sf::Vector2f(9, 4),sf::Vector2f(100.0f,100.0f), 1.3f, 90 ,  0.1f, 2);
+		pirate = Enemy(enemy_pirate__texture, sf::Vector2f(9, 4),sf::Vector2f(100.0f,100.0f), 1.3f, 0.1f, 90, 2);
 		
 		if (!enemy_knight_texture.loadFromFile("images/bad.png"))
 			throw("Enemy image error");
 
-		knight = Enemy(enemy_knight_texture, sf::Vector2f(3, 4), sf::Vector2f(-100.0f, -120.0f), 1.3f, 60, 0.1f, 2);
+		knight = Enemy(enemy_knight_texture, sf::Vector2f(3, 4), sf::Vector2f(-100.0f, -120.0f), 1.3f, 0.1f, 90, 2);
 
 		if (!enemy_magic_texture.loadFromFile("images/wut.png"))
 			throw("Enemy image error");
 
-		magic = Enemy(enemy_magic_texture, sf::Vector2f(3, 4), sf::Vector2f(200.0f, 200.0f), 1.3f, 60, 0.1f, 2);
+		magic = Enemy(enemy_magic_texture, sf::Vector2f(3, 4), sf::Vector2f(200.0f, 200.0f), 1.3f, 0.1f, 90, 2);
 
 		if (!key_texture.loadFromFile("images/key.png"))
 			throw("Key image error");
-		key = Object(key_texture, sf::Vector2f(30.f,30.f), sf::Vector2f(-150.f,-150.f));
+		key = Object(key_texture, sf::Vector2f(30.f,30.f), sf::Vector2f(-150.f,-200.f));
 
 		if (!chat_texture.loadFromFile("images/stone.jpg"))
 			throw("Chat image error");
@@ -126,10 +122,10 @@ void Play::Settup()
 
 void Play::Locks()
 {
-	upLock = Collision(&r, sf::Vector2f(sizeBG.x, 0.0f), sf::Vector2f(0.0f, -(sizeBG.y) / 2.0f - 20.0f));
-	leftLock = Collision(&r, sf::Vector2f(0.0f, sizeBG.y), sf::Vector2f(-(sizeBG.x) / 2.0f, 0.0f));
-	rightLock = Collision(&r, sf::Vector2f(0.0f, sizeBG.y), sf::Vector2f(sizeBG.x / 2.0f + 5.f, 0.0f));
-	downLock = Collision(&r, sf::Vector2f(sizeBG.x, 0.0f), sf::Vector2f(sizeBG.x / 2.0f, sizeBG.y / 2.0f - 30.f));
+	upLock = Collision(nullptr, sf::Vector2f(sizeBG.x, 0.0f), sf::Vector2f(0.0f, -(sizeBG.y) / 2.0f - 20.0f));
+	leftLock = Collision(nullptr, sf::Vector2f(0.0f, sizeBG.y), sf::Vector2f(-(sizeBG.x / 2.0f), 0.0f));
+	rightLock = Collision(nullptr, sf::Vector2f(0.0f, sizeBG.y), sf::Vector2f(sizeBG.x / 2.0f + 5.f, 0.0f));
+	downLock = Collision(nullptr, sf::Vector2f(sizeBG.x, 0.0f), sf::Vector2f(0.0f, sizeBG.y / 2.0f - 30.f));
 }
 
 void Play::CollisionsCheck()
@@ -146,49 +142,8 @@ void Play::CollisionsCheck()
 		communicat_text.setString("You found key");	
 	}
 
-	if (upLock.GetCollider().CheckCollision(pirate.GetCollider(), 1.0f))
-	{
-		pirate.setDirection(3);
-	
-	}
-	else if (downLock.GetCollider().CheckCollision(pirate.GetCollider(), 1.0f))
-	{
-		pirate.setDirection(2);
-	}
-
-	if (upLock.GetCollider().CheckCollision(knight.GetCollider(), 1.0f))
-	{
-		knight.setDirection(3);
-
-	}
-	else if (downLock.GetCollider().CheckCollision(knight.GetCollider(), 1.0f))
-	{
-		knight.setDirection(2);
-	}
-
-
-	if (upLock.GetCollider().CheckCollision(magic.GetCollider(), 1.0f))
-	{
-		magic.setDirection(3);
-
-	}
-	else if (downLock.GetCollider().CheckCollision(magic.GetCollider(), 1.0f))
-	{
-		magic.setDirection(2);
-	}
-
-	if (player.GetCollider().CheckCollision(pirate.GetCollider(), 0.0f))
-	{
-		Lose();
-	}
-	if(player.GetCollider().CheckCollision(magic.GetCollider(), 0.0f))
-	{
-		Lose();
-	}
-	if (player.GetCollider().CheckCollision(knight.GetCollider(), 0.0f))
-	{
-		Lose();
-	}
+	BotsMove();
+	PlayerBotsCollision();
 }
 
 void Play::Draw()
@@ -226,6 +181,41 @@ void Play::Lose()
 	}
 
 	window->close();
+}
+
+void Play::BotChangeDirection(Enemy& p, Collision& one, Collision& two)
+{
+	if (one.GetCollider().CheckCollision(p.GetCollider(), 1.0f))
+	{
+		p.setDirection(3);
+
+	}
+	else if (two.GetCollider().CheckCollision(pirate.GetCollider(), 1.0f))
+	{
+		p.setDirection(2);
+	}
+}
+
+void Play::BotsMove()
+{
+	BotChangeDirection(pirate, upLock, downLock);
+	BotChangeDirection(knight, upLock, downLock);
+	BotChangeDirection(magic, upLock, downLock);
+}
+
+void Play::PlayerBotCollision(Enemy& p)
+{
+	if (player.GetCollider().CheckCollision(p.GetCollider(), 0.0f))
+	{
+		//Lose();
+	}
+}
+
+void Play::PlayerBotsCollision()
+{
+	PlayerBotCollision(pirate);
+	PlayerBotCollision(knight);
+	PlayerBotCollision(magic);
 }
 
 float Play::ClockRestart()

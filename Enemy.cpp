@@ -1,20 +1,10 @@
 #include "Enemy.h"
 
 
-Enemy::Enemy(sf::Texture & t, sf::Vector2f imageCount,  sf::Vector2f p,  float scale_body, float speed, float switchtime, int d)
-	:Character(t, p), Animation(t, imageCount, switchtime)
+Enemy::Enemy(sf::Texture & t, sf::Vector2f imageCount,  sf::Vector2f p,  float scale_body,  float switchtime, float speed, int d)
+	:Character(t, imageCount, p, scale_body, switchtime, speed), Animation(t, imageCount, switchtime)
 {
-	this->speed = speed;
-	row = 0;
 	direction = (Direction) d;
-
-	sizeBody = sf::Vector2f(t.getSize());
-	sizeBody.y = sizeBody.y / imageCount.y * scale_body;
-	sizeBody.x = sizeBody.x / imageCount.x * scale_body;
-
-	body.setSize(sizeBody);
-	body.setOrigin(body.getSize() / 2.0f);
-	body.setTexture(&t);
 	Stay = false;
 }
 
@@ -62,9 +52,4 @@ void Enemy::Update(float deltaTime)
 
 	body.setTextureRect(uvRect);
 	body.move(movement);
-}
-
-void Enemy::Draw(sf::RenderWindow& w)
-{
-	w.draw(body);
 }

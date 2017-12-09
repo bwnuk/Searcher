@@ -21,6 +21,10 @@ public:
 	void CollisionsCheck();
 	void Draw();
 	void Lose();
+	void BotChangeDirection(Enemy& p, Collision& one, Collision& two);
+	void BotsMove();
+	void PlayerBotCollision(Enemy& p);
+	void PlayerBotsCollision();
 
 	float ClockRestart();
 private:

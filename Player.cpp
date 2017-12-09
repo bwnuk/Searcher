@@ -4,21 +4,10 @@
 Player::Player()
 {}
 
-Player::Player(sf::Texture& texture, sf::Vector2f imageCount, float scale_body, float switchTime, float speed, sf::Vector2f p)
-	:Character(texture, p), Animation(texture, imageCount, switchTime)
+Player::Player(sf::Texture& texture, sf::Vector2f imageCount, sf::Vector2f p, float scale_body, float switchTime, float speed)
+	:Character(texture, imageCount, p, scale_body, switchTime, speed), Animation(texture, imageCount, switchTime)
 {
-	this->speed = speed;
-	row = 0;
 	Stay = true;
-
-	sizeBody = sf::Vector2f(texture.getSize());
-	sizeBody.y = sizeBody.y / imageCount.y * scale_body;
-	sizeBody.x = sizeBody.x / imageCount.x * scale_body;
-	
-	body.setSize(sizeBody);
-	body.setOrigin(body.getSize() / 2.0f);
-	body.setTexture(&texture);
-	
 	collisionSize = sizeBody.y + 10.0f;
 }
 
@@ -69,9 +58,4 @@ void Player::Update(float deltaTime)
 
 	body.setTextureRect(uvRect);
 	body.move(movement);
-}
-
-void Player::Draw(sf::RenderWindow& w)
-{
-	w.draw(body);
 }
