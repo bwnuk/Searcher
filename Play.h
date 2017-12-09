@@ -16,8 +16,9 @@ public:
 	Play(sf::RenderWindow& w, sf::View& v);
 	~Play();
 
-	void Settup();
 	void Locks();
+	void Doors();
+	void Settup();
 	void CollisionsCheck();
 	void Draw();
 	void Lose();
@@ -36,11 +37,16 @@ private:
 	Object key;
 	Communicat key_communicat;
 	bool key_found;
+	bool test_1;
 
 	Collision upLock;
 	Collision downLock;
 	Collision rightLock;
 	Collision leftLock;
+
+	Collision leftDoor;
+	Collision downDoor;
+	Collision rightDoor;
 
 	sf::Vector2f sizeBG;
 
@@ -60,8 +66,11 @@ private:
 	sf::Texture map;
 	sf::Texture r;
 	sf::Texture chat;
+	sf::Texture test_t;
+
 	sf::Text communicat_text;
 	sf::Text lose_text;
+	sf::Text test;
 
 	sf::Clock clock;
 };
