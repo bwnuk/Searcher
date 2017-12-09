@@ -1,17 +1,19 @@
 #include "Character.h"
 
-Character::Character(sf::Texture& t, sf::Vector2f s, sf::Vector2f p)
+Character::Character(sf::Texture & texture, sf::Vector2f imageCount, sf::Vector2f p, float scale_body, float switchTime, float speed)
 {
-	body.setSize(s);
-	body.setOrigin(s / 2.0f);
-	body.setTexture(&t);
+	body.setTexture(&texture);
 	body.setPosition(p);
-}
+	this->speed = speed;
+	row = 0;
 
-Character::Character(sf::Texture& t, float x, float y)
-{
-	body.setTexture(&t);
-	body.setPosition(x, y);
+	sizeBody = sf::Vector2f(texture.getSize());
+	sizeBody.y = sizeBody.y / imageCount.y * scale_body;
+	sizeBody.x = sizeBody.x / imageCount.x * scale_body;
+
+	body.setSize(sizeBody);
+	body.setOrigin(body.getSize() / 2.0f);
+	body.setTexture(&texture);
 }
 
 Character::Character()

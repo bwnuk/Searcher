@@ -1,24 +1,13 @@
 #include "Player.h"
 
 
-Player::Player():Character(), Animation()
+Player::Player()
 {}
 
-Player::Player(sf::Texture& texture, sf::Vector2f imageCount, float scale_body, float switchTime, float speed, float x, float y)
-	:Character(texture, x, y), Animation(texture, imageCount, switchTime)
+Player::Player(sf::Texture& texture, sf::Vector2f imageCount, sf::Vector2f p, float scale_body, float switchTime, float speed)
+	:Character(texture, imageCount, p, scale_body, switchTime, speed), Animation(texture, imageCount, switchTime)
 {
-	this->speed = speed;
-	row = 0;
 	Stay = true;
-
-	sizeBody = sf::Vector2f(texture.getSize());
-	sizeBody.y = sizeBody.y / imageCount.y * scale_body;
-	sizeBody.x = sizeBody.x / imageCount.x * scale_body;
-	
-	body.setSize(sizeBody);
-	body.setOrigin(body.getSize() / 2.0f);
-	body.setTexture(&texture);
-	
 	collisionSize = sizeBody.y + 10.0f;
 }
 
@@ -44,23 +33,19 @@ void Player::Update(float deltaTime)
 	if (movement.x > 0.0f)
 	{
 		row = 3;
-		direction = right;
 	}
 	if (movement.x < 0.0f)
 	{
 		row = 1;
-		direction = left;
 	}
 
 	if (movement.y < 0.0f)
 	{
 		row = 0;
-		direction = up;
 	}
 	if (movement.y > 0.0f)
 	{
 		row = 2;
-		direction = down;
 	}
 
 	Stay = false;
@@ -73,9 +58,4 @@ void Player::Update(float deltaTime)
 
 	body.setTextureRect(uvRect);
 	body.move(movement);
-}
-
-void Player::Draw(sf::RenderWindow& w)
-{
-	w.draw(body);
 }
