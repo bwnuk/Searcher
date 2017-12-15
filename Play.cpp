@@ -92,10 +92,8 @@ void Play::Doors()
 {
 	leftDoor = Collision(nullptr, sf::Vector2f(18, 20), sf::Vector2f(-(sizeBG.x / 2.0f), -50.0f));
 	rightDoor = Collision(nullptr, sf::Vector2f(18, 20), sf::Vector2f(sizeBG.x / 2.0f, -50.0f));
-	downDoor = Collision(&nullptr, sf::Vector2f(16, 20), sf::Vector2f(-15.0f, sizeBG.y / 2.0f-25));
+	downDoor = Collision(nullptr, sf::Vector2f(16, 20), sf::Vector2f(-15.0f, sizeBG.y / 2.0f-25));
 }
-
-
 
 void Play::Settup()
 {
@@ -171,13 +169,10 @@ void Play::Draw()
 	window->clear();
 	window->setView(*view);
 	window->draw(look);
-	leftDoor.Draw(*window);
-	rightDoor.Draw(*window);
-	downDoor.Draw(*window);
 
 	pirate.Draw(*window);
-	magic.Draw(*window);
-	knight.Draw(*window);
+	//magic.Draw(*window);
+	//knight.Draw(*window);
 
 	key.Draw(*window);
 	
@@ -242,8 +237,8 @@ void Play::PlayerBotCollision(Enemy& p)
 void Play::PlayerBotsCollision()
 {
 	PlayerBotCollision(pirate);
-	PlayerBotCollision(knight);
-	PlayerBotCollision(magic);
+	//PlayerBotCollision(knight);
+	//PlayerBotCollision(magic);
 }
 
 float Play::ClockRestart()
