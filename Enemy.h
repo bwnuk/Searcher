@@ -1,8 +1,7 @@
 #include "SFML\Graphics.hpp"
 #include "Collider.h"
 #include "Character.h"
-
-
+#include "Collision.h"
 #include "Animation.h"
 
 #pragma once
@@ -15,9 +14,17 @@ public:
 
 	void setDirection(int d);
 	int getDirection();
+
+	int getOne();
+	int getTwo();
+	void setOneTwo(int o, int t);
+
 	void Update(float deltaTime);
+	Collision one;
+	Collision two;
 private:
 	Direction direction;
 	bool Stay;
+	int one, two;
 };
 

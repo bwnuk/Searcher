@@ -22,6 +22,22 @@ int Enemy::getDirection()
 	return int(direction);
 }
 
+int Enemy::getOne()
+{
+	return one;
+}
+
+int Enemy::getTwo()
+{
+	return two;
+}
+
+void Enemy::setOneTwo(int o, int t)
+{
+	one = o;
+	two = t;
+}
+
 void Enemy::Update(float deltaTime)
 {
 	sf::Vector2f movement(0.0f, 0.0f);

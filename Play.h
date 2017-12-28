@@ -9,6 +9,7 @@
 #include "Object.h"
 #include "Communicat.h"
 #include "Enemy.h"
+#include <vector>
 
 class Play: public Collision
 {
