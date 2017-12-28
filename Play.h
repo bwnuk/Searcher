@@ -33,7 +33,8 @@ private:
 	std::vector<Map> maps;
 
 	Player player;
-
+	sf::Texture enemy_knight_texture;
+	sf::Texture enemy_pirate__texture;
 	
 	Communicat communicat;
 	bool key_found;
@@ -62,8 +63,6 @@ private:
 
 	sf::Texture player_texture;
 
-	sf::Texture enemy_magic_texture;
-
 	sf::Texture key_texture;
 	sf::Texture chat_texture;
 
@@ -80,6 +79,6 @@ private:
 	sf::Text test;
 
 	sf::Clock clock;
-
+	
 	int map_coutner;
 };

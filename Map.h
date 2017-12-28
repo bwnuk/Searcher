@@ -47,7 +47,7 @@ private:
 	Collision downLock;
 	Collision rightLock;
 	Collision leftLock;
-
+	sf::Event evnt;
 	sf::Vector2f sizeBG;
 
 	sf::View *view;

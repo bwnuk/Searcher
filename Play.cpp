@@ -187,8 +187,7 @@ void Play::Texture_reading()
 
 void Play::Maps_Settup()
 {
-	sf::Texture enemy_knight_texture;
-	sf::Texture enemy_pirate__texture;
+
 	Enemy pirate;
 	Enemy knight;
 	Object key;
@@ -219,6 +218,7 @@ void Play::Maps_Settup()
 
 	knight = Enemy(enemy_knight_texture, sf::Vector2f(3, 4), sf::Vector2f(-100.0f, -120.0f), 1.3f, 0.1f, 90, 2);
 	knight.setOneTwo(3, 2);
+
 	if (!key_texture.loadFromFile("images/key.png"))
 		throw("Key image error");
 	key = Object(key_texture, sf::Vector2f(30.f, 30.f), sf::Vector2f(-150.f, -200.f));

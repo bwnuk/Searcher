@@ -164,14 +164,30 @@ void Map::Lose(sf::RenderWindow* window)
 	window->setView(*view);
 	window->draw(lose_text);
 	window->display();
-	sf::Event evnt;
-	while (evnt.KeyPressed != sf::Keyboard::Return)
+
+	//sf::Event evnt;
+
+	while (1)
 	{
-		if (evnt.KeyPressed == sf::Keyboard::Return)
+		switch (evnt.type)
+		{
+		case sf::Event::KeyPressed:
+			switch (evnt.key.code)
+			{
+			case sf::Keyboard::Escape:
+				window->close();
+				break;
+			case sf::Keyboard::Return:
+				window->close();
+			default:
+				break;
+			}
 			break;
+		default:
+			break;
+		}
 	}
 
-	window->close();
 }
 
 void Map::Draw(sf::RenderWindow* window)
