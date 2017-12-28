@@ -22,13 +22,6 @@ public:
 	void Sprites_Settup();
 	void Doors();
 	void Settup();
-	void CollisionsCheck();
-
-	void Lose();
-	void BotChangeDirection(Enemy& p, Collision& one, Collision& two);
-	void BotsMove();
-	void PlayerBotCollision(Enemy& p);
-	void PlayerBotsCollision();
 
 	void Texture_reading();
 	void Maps_Settup();

@@ -24,11 +24,13 @@ public:
 	void set_Others(Object& a);
 	void set_Others(Object& a, Object& b);
 
-	void Locks();
+	void Locks_Settup(Collision& a, Collision& b, Collision& c, Collision& d);
 
-	void Player_Lock(Player& p);
+	void Bots_Update(float d);
+
+	void Player_Lock(Player& p, int &m);
 	void Player_Others(Player& p);
-	void Player_Doors(Player& p);
+	bool Player_Doors(Player& p);
 	void Player_Bots(Player& p, sf::RenderWindow* window);
 	void Figures_Direction();
 	void Figure_Direction(Enemy & p, Collision& one, Collision& two, int i, int k);

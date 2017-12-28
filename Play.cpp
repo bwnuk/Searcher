@@ -37,7 +37,9 @@ Play::Play(sf::RenderWindow& w, sf::View& v)
 	lose_text.setPosition(0, 0);
 	lose_text.setString("You lost!");
 	Doors();
+	Locks();
 	test_1 = false;
+
 }
 
 Play::~Play()
@@ -45,9 +47,17 @@ Play::~Play()
 	player.~Player();
 }
 
+void Play::Locks()
+{
+	upLock = Collision(nullptr, sf::Vector2f(sizeBG.x, 0.0f), sf::Vector2f(0.0f, -(sizeBG.y) / 2.0f - 20.0f));
+	leftLock = Collision(nullptr, sf::Vector2f(0.0f, sizeBG.y), sf::Vector2f(-(sizeBG.x / 2.0f), 0.0f));
+	rightLock = Collision(nullptr, sf::Vector2f(0.0f, sizeBG.y), sf::Vector2f(sizeBG.x / 2.0f + 5.f, 0.0f));
+	downLock = Collision(nullptr, sf::Vector2f(sizeBG.x, 0.0f), sf::Vector2f(0.0f, sizeBG.y / 2.0f - 30.f));
+}
+
 void Play::Sprites_Settup()
 {
-	lvl1_s.setTexture(lvl2_t);
+	lvl1_s.setTexture(lvl1_t);
 	lvl1_s.setScale(sf::Vector2f(1.0f, 1.0f));
 	lvl1_s.setOrigin(lvl1_t.getSize().x / 2.0f, lvl1_t.getSize().y / 2.0f);
 
@@ -65,7 +75,7 @@ void Play::Doors()
 	leftDoor = Collision(nullptr, sf::Vector2f(18, 20), sf::Vector2f(-(sizeBG.x / 2.0f), -50.0f));
 	rightDoor = Collision(nullptr, sf::Vector2f(18, 20), sf::Vector2f(sizeBG.x / 2.0f, -50.0f));
 	downDoor = Collision(nullptr, sf::Vector2f(16, 20), sf::Vector2f(-15.0f, sizeBG.y / 2.0f - 25));
-	upDoor = Collision(nullptr, sf::Vector2f(16, 20), sf::Vector2f(-15.0f, -(sizeBG.y / 2.0f - 25)));
+	upDoor = Collision(nullptr, sf::Vector2f(16, 20), sf::Vector2f(-15.0f, -sizeBG.y / 2.0f - 25));
 }
 
 void Play::Settup()
@@ -101,17 +111,59 @@ void Play::Settup()
 			}
 		}
 
-		maps[map_coutner].Figures_Direction();
-		maps[map_coutner].Player_Doors(player);
-		maps[map_coutner].Player_Lock(player);
+		
+		if (maps[map_coutner].Player_Doors(player))
+		{
+			if (player.GetPosition().x > 100 || player.GetPosition().x < -100)
+			{
+				if (player.GetPosition().x > 100)
+				{
+					//right
+					if (map_coutner != 0)
+					{
+						map_coutner++;
+						player.SetPosition(sf::Vector2f(-player.GetPosition().x, player.GetPosition().y));
+					}
+				}
+				else
+				{
+					//left
+					if (map_coutner != 0)
+					{
+						player.SetPosition(sf::Vector2f(-player.GetPosition().x, player.GetPosition().y));
+						map_coutner--;
+					}
+				}
+			}
+			else
+			{
+				if (player.GetPosition().y > 120)
+				{
+					//Down
+					map_coutner++;
+					player.SetPosition(sf::Vector2f(player.GetPosition().x, -player.GetPosition().y));
+				}
+				else
+				{
+					//Up
+					map_coutner--;
+					player.SetPosition(sf::Vector2f(player.GetPosition().x, -player.GetPosition().y));
+				}
+			}
+		}
+
+		maps[map_coutner].Player_Lock(player, map_coutner);
 		maps[map_coutner].Player_Bots(player, window);
 		maps[map_coutner].Player_Others(player);
-		
+		maps[map_coutner].Figures_Direction();
+		maps[map_coutner].Bots_Update(deltatime);
+
 		player.Update(deltatime);
 		
 		Draw();
 	}
 }
+
 
 void Play::Texture_reading()
 {
@@ -145,17 +197,20 @@ void Play::Maps_Settup()
 	
 	//
 	Map lvl_1(lvl1_s, *view);
-	lvl_1.set_Doors(rightDoor, downDoor, upDoor);
+	lvl_1.set_Doors(rightDoor, downDoor, leftDoor);
+	lvl_1.Locks_Settup(upLock, downLock, leftLock, rightLock);
 	maps.push_back(lvl_1);
 
-	//
+	
 	if (!enemy_pirate__texture.loadFromFile("images/piratess.png"))
 		std::cout << "Enemy image error";
 
 	pirate = Enemy(enemy_pirate__texture, sf::Vector2f(9, 4), sf::Vector2f(100.0f, 100.0f), 1.3f, 0.1f, 90, 2);
+	pirate.setOneTwo(3, 2);
 
 	Map lvl_2(lvl2_s, *view, pirate);
 	lvl_2.set_Doors(upDoor, rightDoor);
+	lvl_2.Locks_Settup(upLock, downLock, leftLock, rightLock);
 	maps.push_back(lvl_2);
 
 
@@ -163,13 +218,14 @@ void Play::Maps_Settup()
 		std::cout << "Enemy image error";
 
 	knight = Enemy(enemy_knight_texture, sf::Vector2f(3, 4), sf::Vector2f(-100.0f, -120.0f), 1.3f, 0.1f, 90, 2);
-	
+	knight.setOneTwo(3, 2);
 	if (!key_texture.loadFromFile("images/key.png"))
 		throw("Key image error");
 	key = Object(key_texture, sf::Vector2f(30.f, 30.f), sf::Vector2f(-150.f, -200.f));
 
-	Map lvl_3(lvl2_s, *view, pirate, knight);
+	Map lvl_3(lvl3_s, *view, pirate, knight);
 	lvl_3.set_Doors(leftDoor);
+	lvl_3.Locks_Settup(upLock, downLock, leftLock, rightLock);
 	maps.push_back(lvl_3);
 }
 

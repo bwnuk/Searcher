@@ -4,7 +4,6 @@ Map::Map(sf::Sprite & l, sf::View & v)
 {
 	view = &v;
 	look = &l;
-	Locks();
 	Font();
 }
 
@@ -13,7 +12,6 @@ Map::Map(sf::Sprite &l, sf::View & v, Enemy& p)
 	view = &v;
 	look = &l;
 	f.push_back(p);
-	Locks();
 	Font();
 }
 
@@ -23,7 +21,6 @@ Map::Map(sf::Sprite & l,  sf::View & v, Enemy& p, Enemy & p2)
 	look = &l;
 	f.push_back(p);
 	f.push_back(p2);
-	Locks();
 	Font();
 }
 
@@ -70,15 +67,24 @@ void Map::set_Others(Object & a, Object & b)
 	counter_other = 2;
 }
 
-void Map::Locks()
+void Map::Locks_Settup(Collision & a, Collision & b, Collision & c, Collision & d)
 {
-	upLock = Collision(nullptr, sf::Vector2f(sizeBG.x, 0.0f), sf::Vector2f(0.0f, -(sizeBG.y) / 2.0f - 20.0f));
-	leftLock = Collision(nullptr, sf::Vector2f(0.0f, sizeBG.y), sf::Vector2f(-(sizeBG.x / 2.0f), 0.0f));
-	rightLock = Collision(nullptr, sf::Vector2f(0.0f, sizeBG.y), sf::Vector2f(sizeBG.x / 2.0f + 5.f, 0.0f));
-	downLock = Collision(nullptr, sf::Vector2f(sizeBG.x, 0.0f), sf::Vector2f(0.0f, sizeBG.y / 2.0f - 30.f));
+	upLock = a;
+	downLock = b;
+	leftLock = c;
+	rightLock = d;
 }
 
-void Map::Player_Lock(Player & p)
+void Map::Bots_Update(float d)
+{
+	std::vector<Enemy>::iterator i;
+	for (i = f.begin(); i != f.end(); ++i)
+	{
+		i->Update(d);
+	}
+}
+
+void Map::Player_Lock(Player& p, int& m)
 {
 	//Locking room
 	upLock.GetCollider().CheckCollision(p.GetCollider(), 1.0f);
@@ -99,16 +105,17 @@ void Map::Player_Others(Player & p)
 	}
 }
 
-void Map::Player_Doors(Player& p)
+bool Map::Player_Doors(Player& p)
 {
 	std::vector<Collision>::iterator i;
 	for (i = doors.begin(); i != doors.end(); ++i)
 	{
 		if (i->GetCollider().CheckCollision(p.GetCollider(), 1.0f))
 		{
-			//bool
+			return true;
 		}
 	}
+	return false;
 }
 
 void Map::Player_Bots(Player & p, sf::RenderWindow* window)

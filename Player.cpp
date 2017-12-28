@@ -59,3 +59,8 @@ void Player::Update(float deltaTime)
 	body.setTextureRect(uvRect);
 	body.move(movement);
 }
+
+void Player::SetPosition(sf::Vector2f p)
+{
+	body.setPosition(p);
+}
