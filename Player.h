@@ -12,6 +12,7 @@ public:
 
 	void Update(float deltaTime);
 
+	void SetPosition(sf::Vector2f p);
 	sf::Vector2f GetPosition() const { return  body.getPosition(); }
 private:
 	bool Stay;

@@ -5,53 +5,25 @@ Play::Play(sf::RenderWindow& w, sf::View& v)
 	window = &w;
 	view = &v;
 
-	//Reading font
-	if (!font_text.loadFromFile("font/arial.ttf"))
-		throw("Font error");
+	Texture_reading();
+	Sprites_Settup();
 
-	//Reading background texture, setting background
-	if (!map.loadFromFile("images/1lvl.png"))
-		throw("Background error");
+	sizeBG = sf::Vector2f(lvl1_t.getSize());
 
-	look.setTexture(map);
-	look.setScale(sf::Vector2f(1.0f, 1.0f));
-	look.setOrigin(map.getSize().x / 2.0f, map.getSize().y / 2.0f);
+	view->setCenter(lvl1_s.getPosition());
 
-	sizeBG = sf::Vector2f(map.getSize());
-
-	view->setCenter(look.getPosition());
-
+	map_coutner = 0;
+	
 	//Reading player textur, creating player
 	if (!player_texture.loadFromFile("images/player.png"))
 		throw("Player image error");
 
 	player = Player(player_texture, sf::Vector2f(9, 4), sf::Vector2f(0.0f, 0.0f), 1.3f, 0.1f, 100.0f);
 
-	if (!enemy_pirate__texture.loadFromFile("images/piratess.png"))
-		throw("Enemy image error");
-
-	pirate = Enemy(enemy_pirate__texture, sf::Vector2f(9, 4), sf::Vector2f(100.0f, 100.0f), 1.3f, 0.1f, 90, 2);
-
-	if (!enemy_knight_texture.loadFromFile("images/bad.png"))
-		throw("Enemy image error");
-
-	knight = Enemy(enemy_knight_texture, sf::Vector2f(3, 4), sf::Vector2f(-100.0f, -120.0f), 1.3f, 0.1f, 90, 2);
-
-	if (!enemy_magic_texture.loadFromFile("images/wut.png"))
-		throw("Enemy image error");
-
-	magic = Enemy(enemy_magic_texture, sf::Vector2f(3, 4), sf::Vector2f(200.0f, 200.0f), 1.3f, 0.1f, 90, 2);
-
-	if (!key_texture.loadFromFile("images/key.png"))
-		throw("Key image error");
-	key = Object(key_texture, sf::Vector2f(30.f, 30.f), sf::Vector2f(-150.f, -200.f));
-
 	if (!chat_texture.loadFromFile("images/stone.jpg"))
 		throw("Chat image error");
-	if (!r.loadFromFile("images/stone.jpg"))
-		throw("Chat image error");
 
-	key_communicat = Communicat(chat_texture);
+	communicat = Communicat(chat_texture);
 	key_found = false;
 
 	communicat_text.setFont(font_text);
@@ -59,20 +31,15 @@ Play::Play(sf::RenderWindow& w, sf::View& v)
 	communicat_text.setCharacterSize(50);
 	communicat_text.setPosition(-200, 330);
 
-	test.setFont(font_text);
-	test.setFillColor(sf::Color::Blue);
-	test.setCharacterSize(50);
-	test.setPosition(0, 0);
-	test.setString("Test");
-
 	lose_text.setFont(font_text);
 	lose_text.setFillColor(sf::Color::White);
 	lose_text.setCharacterSize(100);
 	lose_text.setPosition(0, 0);
 	lose_text.setString("You lost!");
-	Locks();
 	Doors();
+	Locks();
 	test_1 = false;
+
 }
 
 Play::~Play()
@@ -88,17 +55,32 @@ void Play::Locks()
 	downLock = Collision(nullptr, sf::Vector2f(sizeBG.x, 0.0f), sf::Vector2f(0.0f, sizeBG.y / 2.0f - 30.f));
 }
 
+void Play::Sprites_Settup()
+{
+	lvl1_s.setTexture(lvl1_t);
+	lvl1_s.setScale(sf::Vector2f(1.0f, 1.0f));
+	lvl1_s.setOrigin(lvl1_t.getSize().x / 2.0f, lvl1_t.getSize().y / 2.0f);
+
+	lvl2_s.setTexture(lvl2_t);
+	lvl2_s.setScale(sf::Vector2f(1.0f, 1.0f));
+	lvl2_s.setOrigin(lvl2_t.getSize().x / 2.0f, lvl2_t.getSize().y / 2.0f);
+
+	lvl3_s.setTexture(lvl3_t);
+	lvl3_s.setScale(sf::Vector2f(1.0f, 1.0f));
+	lvl3_s.setOrigin(lvl3_t.getSize().x / 2.0f, lvl3_t.getSize().y / 2.0f);
+}
+
 void Play::Doors()
 {
 	leftDoor = Collision(nullptr, sf::Vector2f(18, 20), sf::Vector2f(-(sizeBG.x / 2.0f), -50.0f));
 	rightDoor = Collision(nullptr, sf::Vector2f(18, 20), sf::Vector2f(sizeBG.x / 2.0f, -50.0f));
-	downDoor = Collision(&nullptr, sf::Vector2f(16, 20), sf::Vector2f(-15.0f, sizeBG.y / 2.0f-25));
+	downDoor = Collision(nullptr, sf::Vector2f(16, 20), sf::Vector2f(-15.0f, sizeBG.y / 2.0f - 25));
+	upDoor = Collision(nullptr, sf::Vector2f(16, 20), sf::Vector2f(-15.0f, -sizeBG.y / 2.0f - 25));
 }
-
-
 
 void Play::Settup()
 {
+	Maps_Settup();
 	while (window->isOpen())
 	{
 		float deltatime = ClockRestart();
@@ -129,124 +111,132 @@ void Play::Settup()
 			}
 		}
 
-		CollisionsCheck();
-		magic.Update(deltatime);
-		knight.Update(deltatime);
-		pirate.Update(deltatime);
+		
+		if (maps[map_coutner].Player_Doors(player))
+		{
+			if (player.GetPosition().x > 100 || player.GetPosition().x < -100)
+			{
+				if (player.GetPosition().x > 100)
+				{
+					//right
+					if (map_coutner != 0)
+					{
+						map_coutner++;
+						player.SetPosition(sf::Vector2f(-player.GetPosition().x, player.GetPosition().y));
+					}
+				}
+				else
+				{
+					//left
+					if (map_coutner != 0)
+					{
+						player.SetPosition(sf::Vector2f(-player.GetPosition().x, player.GetPosition().y));
+						map_coutner--;
+					}
+				}
+			}
+			else
+			{
+				if (player.GetPosition().y > 120)
+				{
+					//Down
+					map_coutner++;
+					player.SetPosition(sf::Vector2f(player.GetPosition().x, -player.GetPosition().y));
+				}
+				else
+				{
+					//Up
+					map_coutner--;
+					player.SetPosition(sf::Vector2f(player.GetPosition().x, -player.GetPosition().y));
+				}
+			}
+		}
+
+		maps[map_coutner].Player_Lock(player, map_coutner);
+		maps[map_coutner].Player_Bots(player, window);
+		maps[map_coutner].Player_Others(player);
+		maps[map_coutner].Figures_Direction();
+		maps[map_coutner].Bots_Update(deltatime);
+
 		player.Update(deltatime);
+		
 		Draw();
 	}
 }
 
-void Play::CollisionsCheck()
+
+void Play::Texture_reading()
 {
-	//Locking room
-	upLock.GetCollider().CheckCollision(player.GetCollider(), 1.0f);
-	rightLock.GetCollider().CheckCollision(player.GetCollider(), 1.0f);
-	leftLock.GetCollider().CheckCollision(player.GetCollider(), 1.0f);
-	downLock.GetCollider().CheckCollision(player.GetCollider(), 1.0f);
-
-	if (downDoor.GetCollider().CheckCollision(player.GetCollider(), 1.0f))
-		test_1 = true;
-
-	if (leftDoor.GetCollider().CheckCollision(player.GetCollider(), 1.0f))
-		test_1 = true;
-
-	if (rightDoor.GetCollider().CheckCollision(player.GetCollider(), 1.0f))
-		test_1 = true;
-
-	if (key.GetCollider().CheckCollision(player.GetCollider(), 1.0f))
+	try 
 	{
-		key_found = true;
-		communicat_text.setString("You found key");	
+		if (!lvl1_t.loadFromFile("images/1lvl.png"))
+			throw("Background error");
+		if (!lvl2_t.loadFromFile("images/2lvl.png"))
+			throw("Background error");
+		if (!lvl3_t.loadFromFile("images/3lvl.png"))
+			throw("Background error");
 	}
-
-	BotsMove();
-	PlayerBotsCollision();
-}
-
-void Play::Draw()
-{
-	//Drawing on the screen
-	window->clear();
-	window->setView(*view);
-	window->draw(look);
-	leftDoor.Draw(*window);
-	rightDoor.Draw(*window);
-	downDoor.Draw(*window);
-
-	pirate.Draw(*window);
-	magic.Draw(*window);
-	knight.Draw(*window);
-
-	key.Draw(*window);
-	
-	player.Draw(*window);
-
-	if (key_found)
+	catch (std::exception& w)
 	{
-		key_communicat.Draw(window);
-		window->draw(communicat_text);
-	}
-
-	if (test_1)
-		window->draw(test);
+		std::cout << w.what();
 		
-	window->display();
-}
-
-void Play::Lose()
-{
-	window->clear();
-	window->setView(*view);
-	window->draw(lose_text);
-	window->display();
-	sf::Event evnt;
-	while (evnt.KeyPressed != sf::Keyboard::Return)
-	{
-		if (evnt.KeyPressed == sf::Keyboard::Return)
-			break;
 	}
 
-	window->close();
+
 }
 
-void Play::BotChangeDirection(Enemy& p, Collision& one, Collision& two)
+void Play::Maps_Settup()
 {
-	if (one.GetCollider().CheckCollision(p.GetCollider(), 1.0f))
-	{
-		p.setDirection(3);
 
-	}
-	else if (two.GetCollider().CheckCollision(p.GetCollider(), 1.0f))
-	{
-		p.setDirection(2);
-	}
-}
+	Enemy pirate;
+	Enemy knight;
+	Object key;
 
-void Play::BotsMove()
-{
-	BotChangeDirection(pirate, upLock, downLock);
-	BotChangeDirection(knight, upLock, downLock);
-	BotChangeDirection(magic, upLock, downLock);
-}
+	Doors();
+	
+	//
+	Map lvl_1(lvl1_s, *view);
+	lvl_1.set_Doors(rightDoor, downDoor, leftDoor);
+	lvl_1.Locks_Settup(upLock, downLock, leftLock, rightLock);
+	maps.push_back(lvl_1);
 
-void Play::PlayerBotCollision(Enemy& p)
-{
-	if (player.GetCollider().CheckCollision(p.GetCollider(), 0.0f))
-	{
-		//Lose();
-	}
-}
+	
+	if (!enemy_pirate__texture.loadFromFile("images/piratess.png"))
+		std::cout << "Enemy image error";
 
-void Play::PlayerBotsCollision()
-{
-	PlayerBotCollision(pirate);
-	PlayerBotCollision(knight);
-	PlayerBotCollision(magic);
+	pirate = Enemy(enemy_pirate__texture, sf::Vector2f(9, 4), sf::Vector2f(100.0f, 100.0f), 1.3f, 0.1f, 90, 2);
+	pirate.setOneTwo(3, 2);
+
+	Map lvl_2(lvl2_s, *view, pirate);
+	lvl_2.set_Doors(upDoor, rightDoor);
+	lvl_2.Locks_Settup(upLock, downLock, leftLock, rightLock);
+	maps.push_back(lvl_2);
+
+
+	if (!enemy_knight_texture.loadFromFile("images/bad.png"))
+		std::cout << "Enemy image error";
+
+	knight = Enemy(enemy_knight_texture, sf::Vector2f(3, 4), sf::Vector2f(-100.0f, -120.0f), 1.3f, 0.1f, 90, 2);
+	knight.setOneTwo(3, 2);
+
+	if (!key_texture.loadFromFile("images/key.png"))
+		throw("Key image error");
+	key = Object(key_texture, sf::Vector2f(30.f, 30.f), sf::Vector2f(-150.f, -200.f));
+
+	Map lvl_3(lvl3_s, *view, pirate, knight);
+	lvl_3.set_Doors(leftDoor);
+	lvl_3.Locks_Settup(upLock, downLock, leftLock, rightLock);
+	maps.push_back(lvl_3);
 }
 
 float Play::ClockRestart()
 {
 	return clock.restart().asSeconds();
+}
+
+void Play::Draw()
+{
+	maps[map_coutner].Draw(window);
+	player.Draw(*window);
+	window->display();
 }
