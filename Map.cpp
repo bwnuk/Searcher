@@ -1,17 +1,15 @@
 #include "Map.h"
 
-Map::Map(sf::Sprite & l, sf::RenderWindow & w, sf::View & v)
+Map::Map(sf::Sprite & l, sf::View & v)
 {
-	window = &w;
 	view = &v;
 	look = &l;
 	Locks();
 	Font();
 }
 
-Map::Map(sf::Sprite & l, sf::RenderWindow & w, sf::View & v, Enemy& p)
+Map::Map(sf::Sprite &l, sf::View & v, Enemy& p)
 {
-	window = &w;
 	view = &v;
 	look = &l;
 	f.push_back(p);
@@ -19,9 +17,8 @@ Map::Map(sf::Sprite & l, sf::RenderWindow & w, sf::View & v, Enemy& p)
 	Font();
 }
 
-Map::Map(sf::Sprite & l, sf::RenderWindow & w, sf::View & v, Enemy& p, Enemy & p2)
+Map::Map(sf::Sprite & l,  sf::View & v, Enemy& p, Enemy & p2)
 {
-	window = &w;
 	view = &v;
 	look = &l;
 	f.push_back(p);
@@ -109,19 +106,19 @@ void Map::Player_Doors(Player& p)
 	{
 		if (i->GetCollider().CheckCollision(p.GetCollider(), 1.0f))
 		{
-
+			//bool
 		}
 	}
 }
 
-void Map::Player_Bots(Player & p)
+void Map::Player_Bots(Player & p, sf::RenderWindow* window)
 {
 	std::vector<Enemy>::iterator i;
 	for (i = f.begin(); i != f.end(); ++i)
 	{
 		if (p.GetCollider().CheckCollision(i->GetCollider(), 0.0f))
 		{
-			Lose();
+			Lose(window);
 		}
 	}
 
@@ -148,7 +145,7 @@ void Map::Figure_Direction(Enemy& p, Collision& one, Collision& two, int i, int 
 	}
 }
 
-void Map::Lose()
+void Map::Lose(sf::RenderWindow* window)
 {
 	lose_text.setFont(font_text);
 	lose_text.setFillColor(sf::Color::White);
@@ -170,7 +167,7 @@ void Map::Lose()
 	window->close();
 }
 
-void Map::Draw()
+void Map::Draw(sf::RenderWindow* window)
 {
 	//Drawing on the screen
 	window->clear();

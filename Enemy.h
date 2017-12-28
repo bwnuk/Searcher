@@ -25,6 +25,6 @@ public:
 private:
 	Direction direction;
 	bool Stay;
-	int one, two;
+	int one_dir, two_dir;
 };
 

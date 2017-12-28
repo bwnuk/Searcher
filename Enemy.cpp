@@ -24,18 +24,18 @@ int Enemy::getDirection()
 
 int Enemy::getOne()
 {
-	return one;
+	return one_dir;
 }
 
 int Enemy::getTwo()
 {
-	return two;
+	return two_dir;
 }
 
 void Enemy::setOneTwo(int o, int t)
 {
-	one = o;
-	two = t;
+	one_dir = o;
+	two_dir = t;
 }
 
 void Enemy::Update(float deltaTime)

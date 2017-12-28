@@ -10,9 +10,9 @@
 class Map
 {
 public:
-	Map(sf::Sprite& l, sf::RenderWindow& w, sf::View& v);
-	Map(sf::Sprite & l, sf::RenderWindow & w, sf::View & v, Enemy& p);
-	Map(sf::Sprite & l, sf::RenderWindow & w, sf::View & v, Enemy& p, Enemy& p2);
+	Map(sf::Sprite& l, sf::View& v);
+	Map(sf::Sprite & l, sf::View & v, Enemy& p);
+	Map(sf::Sprite & l, sf::View & v, Enemy& p, Enemy& p2);
 	
 	~Map();
 	
@@ -29,13 +29,13 @@ public:
 	void Player_Lock(Player& p);
 	void Player_Others(Player& p);
 	void Player_Doors(Player& p);
-	void Player_Bots(Player& p);
+	void Player_Bots(Player& p, sf::RenderWindow* window);
 	void Figures_Direction();
 	void Figure_Direction(Enemy & p, Collision& one, Collision& two, int i, int k);
 
-	void Lose();
+	void Lose(sf::RenderWindow* window);
 
-	void Draw();
+	void Draw(sf::RenderWindow* window);
 private:
 	std::vector<Enemy>f;
 	std::vector<Object> others;
@@ -48,7 +48,6 @@ private:
 
 	sf::Vector2f sizeBG;
 
-	sf::RenderWindow *window;
 	sf::View *view;
 
 	sf::Sprite *look;
