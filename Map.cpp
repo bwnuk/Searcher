@@ -93,16 +93,17 @@ void Map::Player_Lock(Player& p, int& m)
 	downLock.GetCollider().CheckCollision(p.GetCollider(), 1.0f);
 }
 
-void Map::Player_Others(Player & p)
+bool Map::Player_Others(Player & p)
 {
 	std::vector<Object>::iterator i;
 	for (i = others.begin(); i != others.end(); ++i)
 	{
 		if (i->GetCollider().CheckCollision(p.GetCollider(), 1.0f))
 		{
-
+			return true;
 		}
 	}
+	return false;
 }
 
 bool Map::Player_Doors(Player& p)

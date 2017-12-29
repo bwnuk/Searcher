@@ -23,6 +23,7 @@ public:
 	void Doors();
 	void Settup();
 
+	void Player_Doors_Map();
 	void Texture_reading();
 	void Maps_Settup();
 
@@ -35,8 +36,7 @@ private:
 	Player player;
 	
 	Communicat communicat;
-	bool key_found;
-	bool test_1;
+	bool comunicat_show;
 
 	Collision upLock;
 	Collision downLock;
@@ -80,5 +80,6 @@ private:
 
 	sf::Clock clock;
 	
+	int button_counter;
 	int map_coutner;
 };
