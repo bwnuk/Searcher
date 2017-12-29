@@ -147,7 +147,7 @@ void Play::Settup()
 				{
 					//Up
 					map_coutner--;
-					player.SetPosition(sf::Vector2f(player.GetPosition().x, -player.GetPosition().y));
+					player.SetPosition(sf::Vector2f(player.GetPosition().x, -player.GetPosition().y-50.0f));
 				}
 			}
 		}
@@ -187,24 +187,29 @@ void Play::Texture_reading()
 
 void Play::Maps_Settup()
 {
-
 	Enemy pirate;
 	Enemy knight;
+
+	Object sign;
 	Object key;
 
 	Doors();
 	
+	if (!sign_texture.loadFromFile("images/sign.png"))
+		throw("Key image error");
+	sign = Object(sign_texture, sf::Vector2f(50.f, 50.f), sf::Vector2f(200.f, -220.f));
 	//
 	Map lvl_1(lvl1_s, *view);
 	lvl_1.set_Doors(rightDoor, downDoor, leftDoor);
 	lvl_1.Locks_Settup(upLock, downLock, leftLock, rightLock);
+	lvl_1.set_Others(sign);
 	maps.push_back(lvl_1);
 
 	
 	if (!enemy_pirate__texture.loadFromFile("images/piratess.png"))
 		std::cout << "Enemy image error";
 
-	pirate = Enemy(enemy_pirate__texture, sf::Vector2f(9, 4), sf::Vector2f(100.0f, 100.0f), 1.3f, 0.1f, 90, 2);
+	pirate = Enemy(enemy_pirate__texture, sf::Vector2f(9, 4), sf::Vector2f(100.0f, 100.0f), 1.3f, 0.1f, 100, 2);
 	pirate.setOneTwo(3, 2);
 
 	Map lvl_2(lvl2_s, *view, pirate);
@@ -215,16 +220,16 @@ void Play::Maps_Settup()
 
 	if (!enemy_knight_texture.loadFromFile("images/bad.png"))
 		std::cout << "Enemy image error";
-
-	knight = Enemy(enemy_knight_texture, sf::Vector2f(3, 4), sf::Vector2f(-100.0f, -120.0f), 1.3f, 0.1f, 90, 2);
+	knight = Enemy(enemy_knight_texture, sf::Vector2f(3, 4), sf::Vector2f(-20.0f, -150.0f), 1.3f, 0.1f, 100, 2);
 	knight.setOneTwo(3, 2);
 
 	if (!key_texture.loadFromFile("images/key.png"))
 		throw("Key image error");
-	key = Object(key_texture, sf::Vector2f(30.f, 30.f), sf::Vector2f(-150.f, -200.f));
+	key = Object(key_texture, sf::Vector2f(30.f, 30.f), sf::Vector2f(220.f, -210.f));
 
 	Map lvl_3(lvl3_s, *view, pirate, knight);
 	lvl_3.set_Doors(leftDoor);
+	lvl_3.set_Others(key);
 	lvl_3.Locks_Settup(upLock, downLock, leftLock, rightLock);
 	maps.push_back(lvl_3);
 }

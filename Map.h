@@ -32,6 +32,7 @@ public:
 	void Player_Others(Player& p);
 	bool Player_Doors(Player& p);
 	void Player_Bots(Player& p, sf::RenderWindow* window);
+
 	void Figures_Direction();
 	void Figure_Direction(Enemy & p, Collision& one, Collision& two, int i, int k);
 

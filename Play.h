@@ -33,8 +33,6 @@ private:
 	std::vector<Map> maps;
 
 	Player player;
-	sf::Texture enemy_knight_texture;
-	sf::Texture enemy_pirate__texture;
 	
 	Communicat communicat;
 	bool key_found;
@@ -62,8 +60,10 @@ private:
 	sf::Sprite lvl3_s;
 
 	sf::Texture player_texture;
-
+	sf::Texture enemy_knight_texture;
+	sf::Texture enemy_pirate__texture;
 	sf::Texture key_texture;
+	sf::Texture sign_texture;
 	sf::Texture chat_texture;
 
 	sf::Texture lvl1_t;
