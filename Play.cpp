@@ -34,6 +34,12 @@ Play::Play(sf::RenderWindow& w, sf::View& v)
 	Doors();
 	Locks();
 
+	key_found = false;
+	further = false;
+
+	bool b = false;
+	buttons.push_back(b);
+	buttons.push_back(b);
 }
 
 Play::~Play()
@@ -109,38 +115,12 @@ void Play::Settup()
 
 		maps[map_coutner].Player_Lock(player, map_coutner);
 		maps[map_coutner].Player_Bots(player, window);
-
-		if (maps[map_coutner].Player_Others(player))
+		int temp = maps[map_coutner].Player_Others(player);
+		if ( temp != -1)
 		{
-			switch (map_coutner)
-			{
-			case 0:
-				communicat_text.setString("<PUZZLE> You need to find 2 buttons\nSolution: \nLEFT and Right Corner");
-				comunicat_show = true;
-				break;
-			case 1:
-				button_counter++;
-
-				if (button_counter == 2)
-				{
-					communicat_text.setString("You clicked two buttons");
-					comunicat_show = true;
-				}
-				else if (button_counter == 1)
-				{
-					comunicat_show = true;
-					communicat_text.setString("You clicked one button");
-				}
-
-				break;
-			case 2:
-				communicat_text.setString("YOU FOUND KEY");
-				comunicat_show = true;
-				break;
-			default:
-				break;
-			}
+			Others_Type(temp);
 		}
+
 		maps[map_coutner].Figures_Direction();
 		maps[map_coutner].Bots_Update(deltatime);
 
@@ -150,6 +130,49 @@ void Play::Settup()
 	}
 }
 
+
+void Play::Others_Type(int n)
+{
+	switch (map_coutner)
+	{
+	case 0:
+		communicat_text.setString("<PUZZLE> You need to find 2 buttons\nSolution: \nLEFT and Right Corner");
+		further = true;
+		comunicat_show = true;
+		break;
+	case 1:
+		if (n != 0&& n != 1)
+		{
+			std::cout << n;
+			return;
+		}
+		
+		buttons[n] = true;
+		if (buttons[0])
+		{
+			if (buttons[1])
+			{
+				communicat_text.setString("You clicked two buttons");
+				comunicat_show = true;
+				further = true;
+			}
+			else
+			{
+				comunicat_show = true;
+				communicat_text.setString("You clicked one button");
+			}
+		}
+
+		break;
+	case 2:
+		communicat_text.setString("YOU FOUND KEY");
+		comunicat_show = true;
+		key_found = true;
+		break;
+	default:
+		break;
+	}
+}
 
 void Play::Player_Doors_Map()
 {
@@ -162,8 +185,29 @@ void Play::Player_Doors_Map()
 				//right
 				if (map_coutner != 0)
 				{
-					map_coutner++;
-					player.SetPosition(sf::Vector2f(-player.GetPosition().x, player.GetPosition().y));
+					if (further)
+					{
+						map_coutner++;
+						player.SetPosition(sf::Vector2f(-player.GetPosition().x, player.GetPosition().y));
+						further = false;
+					}
+					else
+					{
+						comunicat_show = true;
+						communicat_text.setString("You need to click buttons to open door");
+					}
+				}
+				else
+				{
+					if (key_found)
+					{
+						//END
+					}
+					else
+					{
+						comunicat_show = true;
+						communicat_text.setString("You need to find key to open door");
+					}
 				}
 			}
 			else
@@ -180,9 +224,14 @@ void Play::Player_Doors_Map()
 		{
 			if (player.GetPosition().y > 120)
 			{
+				further = true;
 				//Down
-				map_coutner++;
-				player.SetPosition(sf::Vector2f(player.GetPosition().x, -player.GetPosition().y));
+				if (further)
+				{
+					map_coutner++;
+					player.SetPosition(sf::Vector2f(player.GetPosition().x, -player.GetPosition().y));
+					further = false;
+				}
 			}
 			else
 			{
@@ -245,7 +294,7 @@ void Play::Maps_Settup()
 
 	button_1 = Object(nullptr, sf::Vector2f(25.f, 25.f), sf::Vector2f(-200.f, 220.f));
 	button_2 = Object(nullptr, sf::Vector2f(25.f, 25.f), sf::Vector2f(-200.f, -220.f));
-	button_counter = 0;
+
 	button_1.Set_Type(1);
 	button_2.Set_Type(1);
 

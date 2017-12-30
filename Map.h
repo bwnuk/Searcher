@@ -28,8 +28,11 @@ public:
 
 	void Bots_Update(float d);
 
+	int Get_Others_Size();
+	int Get_Others_Type(int n);
+
 	void Player_Lock(Player& p, int &m);
-	bool Player_Others(Player& p);
+	int Player_Others(Player& p);
 	bool Player_Doors(Player& p);
 	void Player_Bots(Player& p, sf::RenderWindow* window);
 

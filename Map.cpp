@@ -84,6 +84,16 @@ void Map::Bots_Update(float d)
 	}
 }
 
+int Map::Get_Others_Size()
+{
+	return others.size();
+}
+
+int Map::Get_Others_Type(int n)
+{
+	return others[n].Get_Type();
+}
+
 void Map::Player_Lock(Player& p, int& m)
 {
 	//Locking room
@@ -93,17 +103,17 @@ void Map::Player_Lock(Player& p, int& m)
 	downLock.GetCollider().CheckCollision(p.GetCollider(), 1.0f);
 }
 
-bool Map::Player_Others(Player & p)
+int Map::Player_Others(Player & p)
 {
-	std::vector<Object>::iterator i;
-	for (i = others.begin(); i != others.end(); ++i)
+	int i;
+	for (i = 0; i < others.size();i++)
 	{
-		if (i->GetCollider().CheckCollision(p.GetCollider(), 1.0f))
+		if (others[i].GetCollider().CheckCollision(p.GetCollider(), 1.0f))
 		{
-			return true;
+			return i;
 		}
 	}
-	return false;
+	return -1;
 }
 
 bool Map::Player_Doors(Player& p)
@@ -131,6 +141,7 @@ void Map::Player_Bots(Player & p, sf::RenderWindow* window)
 	}
 
 }
+
 void Map::Figures_Direction()
 {
 	std::vector<Enemy>::iterator i;
@@ -158,7 +169,7 @@ void Map::Lose(sf::RenderWindow* window)
 	lose_text.setFont(font_text);
 	lose_text.setFillColor(sf::Color::White);
 	lose_text.setCharacterSize(100);
-	lose_text.setPosition(0, 0);
+	lose_text.setPosition(-200, 0);
 	lose_text.setString("You lost!");
 
 	window->clear();

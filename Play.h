@@ -23,6 +23,7 @@ public:
 	void Doors();
 	void Settup();
 
+	void Others_Type(int n);
 	void Player_Doors_Map();
 	void Texture_reading();
 	void Maps_Settup();
@@ -32,11 +33,14 @@ public:
 	void Draw();
 private:
 	std::vector<Map> maps;
+	std::vector<bool> buttons;
 
 	Player player;
 	
 	Communicat communicat;
 	bool comunicat_show;
+	bool further;
+	bool key_found;
 
 	Collision upLock;
 	Collision downLock;
@@ -80,6 +84,5 @@ private:
 
 	sf::Clock clock;
 	
-	int button_counter;
 	int map_coutner;
 };
