@@ -141,12 +141,13 @@ void Play::Others_Type(int n)
 		comunicat_show = true;
 		break;
 	case 1:
-		if (n != 0&& n != 1)
+		if (n != 0 && n != 1)
 		{
-			std::cout << n;
 			return;
 		}
-		
+
+
+
 		buttons[n] = true;
 		if (buttons[0])
 		{
@@ -162,12 +163,18 @@ void Play::Others_Type(int n)
 				communicat_text.setString("You clicked one button");
 			}
 		}
+		else if(buttons[1])
+		{
+			comunicat_show = true;
+			communicat_text.setString("You clicked one button");
+		}
 
 		break;
 	case 2:
 		communicat_text.setString("YOU FOUND KEY");
 		comunicat_show = true;
 		key_found = true;
+		maps[map_coutner].Set_Drawable(false, 0);
 		break;
 	default:
 		break;
@@ -190,6 +197,7 @@ void Play::Player_Doors_Map()
 						map_coutner++;
 						player.SetPosition(sf::Vector2f(-player.GetPosition().x, player.GetPosition().y));
 						further = false;
+						comunicat_show = false;
 					}
 					else
 					{
@@ -202,6 +210,7 @@ void Play::Player_Doors_Map()
 					if (key_found)
 					{
 						//END
+						window->close();
 					}
 					else
 					{
@@ -216,7 +225,8 @@ void Play::Player_Doors_Map()
 				if (map_coutner != 0)
 				{
 					player.SetPosition(sf::Vector2f(-player.GetPosition().x, player.GetPosition().y));
-					map_coutner--;
+					map_coutner--; 
+					comunicat_show = false;
 				}
 			}
 		}
@@ -231,6 +241,7 @@ void Play::Player_Doors_Map()
 					map_coutner++;
 					player.SetPosition(sf::Vector2f(player.GetPosition().x, -player.GetPosition().y));
 					further = false;
+					comunicat_show = false;
 				}
 			}
 			else
@@ -238,6 +249,7 @@ void Play::Player_Doors_Map()
 				//Up
 				map_coutner--;
 				player.SetPosition(sf::Vector2f(player.GetPosition().x, -player.GetPosition().y - 50.0f));
+				comunicat_show = false;
 			}
 		}
 	}
@@ -294,6 +306,9 @@ void Play::Maps_Settup()
 
 	button_1 = Object(nullptr, sf::Vector2f(25.f, 25.f), sf::Vector2f(-200.f, 220.f));
 	button_2 = Object(nullptr, sf::Vector2f(25.f, 25.f), sf::Vector2f(-200.f, -220.f));
+	
+	button_1.Set_Drawable(false);
+	button_2.Set_Drawable(false);
 
 	button_1.Set_Type(1);
 	button_2.Set_Type(1);

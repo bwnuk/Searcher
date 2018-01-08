@@ -142,6 +142,11 @@ void Map::Player_Bots(Player & p, sf::RenderWindow* window)
 
 }
 
+void Map::Set_Drawable(bool d, int n)
+{
+	others[n].Set_Drawable(d);
+}
+
 void Map::Figures_Direction()
 {
 	std::vector<Enemy>::iterator i;
@@ -218,6 +223,7 @@ void Map::Draw(sf::RenderWindow* window)
 	std::vector<Object>::iterator k;
 	for (k = others.begin(); k != others.end(); ++k)
 	{
-		k->Draw(*window);
+		if(k->Get_Drawable())
+			k->Draw(*window);
 	}
 }
